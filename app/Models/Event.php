@@ -15,6 +15,11 @@ class Event extends Model
         'user_id',
         'nama_event',
         'jenis_event',
+        'tipe_lokasi',
+        'jumlah_tamu',
+        'harga_per_orang',
+        'nama_paket',
+        'fasilitas_paket',
         'tanggal_event',
         'lokasi_venue',
         'kota_venue',
@@ -45,8 +50,34 @@ class Event extends Model
         return $this->hasMany(BudgetItem::class);
     }
 
+    public function getSubtotalCateringAttribute(): int
+    {
+        return ($this->jumlah_tamu ?? 0) * ($this->harga_per_orang ?? 0);
+    }
+
     public function getTotalAnggaranAttribute(): int
     {
-        return $this->budgetItems->sum('estimasi_biaya');
+        return $this->subtotal_catering + $this->budgetItems->sum('estimasi_biaya');
+    }
+
+    public function getDaftarFasilitasAttribute(): array
+    {
+        if (!$this->fasilitas_paket) {
+            return [];
+        }
+
+        return array_filter(explode("\n", $this->fasilitas_paket));
+    }
+
+    public function getHariMenujuEventAttribute(): int
+    {
+        return now()->startOfDay()->diffInDays($this->tanggal_event, false);
+    }
+
+    public function getButuhCekCuacaAttribute(): bool
+    {
+        return $this->tipe_lokasi === 'outdoor'
+            && $this->hari_menuju_event >= 0
+            && $this->hari_menuju_event <= 3;
     }
 }

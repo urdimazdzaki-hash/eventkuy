@@ -29,7 +29,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2">
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Nama Acara</label>
-                    <input type="text" name="nama_event" value="{{ old('nama_event') }}" placeholder="Contoh: Pernikahan Dimas & Sinta"
+                    <input type="text" name="nama_event" value="{{ old('nama_event') }}" placeholder="Contoh: Pernikahan Syarif & Ranita"
                            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coral">
                 </div>
 

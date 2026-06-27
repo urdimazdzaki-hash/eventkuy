@@ -50,6 +50,11 @@ class Event extends Model
         return $this->hasMany(BudgetItem::class);
     }
 
+    public function checklists(): HasMany
+    {
+        return $this->hasMany(Checklist::class);
+    }
+
     public function getSubtotalCateringAttribute(): int
     {
         return ($this->jumlah_tamu ?? 0) * ($this->harga_per_orang ?? 0);

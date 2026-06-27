@@ -4,27 +4,85 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-8 py-8">
 
-    <div class="flex items-start justify-between mb-6">
-        <div>
-            <a href="{{ route('events.index') }}" class="text-sm text-gray-400 hover:text-coral mb-2 inline-block">&larr; Kembali ke Dashboard</a>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $event->nama_event }}</h1>
-            <p class="text-gray-500 dark:text-gray-400">
-                {{ ucfirst($event->jenis_event) }} &middot; {{ ucfirst($event->tipe_lokasi) }} &middot;
-                {{ $event->tanggal_event->translatedFormat('d F Y') }}
-            </p>
+    <div class="relative bg-gradient-to-r from-coral to-red-400 rounded-2xl p-8 mb-6 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 right-0 w-72 h-72 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-56 h-56 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
         </div>
-        <div class="flex gap-2">
-            <a href="{{ route('events.edit', $event) }}"
-               class="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                Edit
-            </a>
-            <form method="POST" action="{{ route('events.destroy', $event) }}" onsubmit="return confirm('Yakin hapus acara ini?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="px-4 py-2 rounded-full border border-red-200 dark:border-red-900 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition">
-                    Hapus
-                </button>
-            </form>
+        <div class="relative z-10">
+            <a href="{{ route('events.index') }}" class="text-white/70 hover:text-white text-sm mb-4 inline-block">&larr; Kembali ke Dashboard</a>
+            <div class="flex items-start justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-2">{{ $event->nama_event }}</h1>
+                    <div class="flex flex-wrap gap-3 text-white/80 text-sm">
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="tag" class="w-4 h-4"></i>
+                            {{ ucfirst($event->jenis_event) }}
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i>
+                            {{ $event->lokasi_venue ?? 'Venue belum diset' }}{{ $event->kota_venue ? ', ' . $event->kota_venue : '' }}
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                            {{ $event->tanggal_event->translatedFormat('d F Y') }}
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            H-{{ $event->hari_menuju_event }}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex gap-2 flex-shrink-0">
+                    <a href="{{ route('events.edit', $event) }}"
+                       class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white text-sm font-medium transition">
+                        Edit
+                    </a>
+                    <form method="POST" action="{{ route('events.destroy', $event) }}" onsubmit="return confirm('Yakin hapus acara ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 rounded-full bg-white/20 hover:bg-red-500 text-white text-sm font-medium transition">
+                            Hapus
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @php
+        $checklist = [
+            ['label' => 'Nama acara', 'done' => (bool) $event->nama_event],
+            ['label' => 'Tanggal acara', 'done' => (bool) $event->tanggal_event],
+            ['label' => 'Venue & kota', 'done' => (bool) $event->lokasi_venue && (bool) $event->kota_venue],
+            ['label' => 'Jumlah tamu', 'done' => (bool) $event->jumlah_tamu],
+            ['label' => 'Rundown acara', 'done' => $event->rundowns->isNotEmpty()],
+            ['label' => 'Item anggaran', 'done' => $event->budgetItems->isNotEmpty() || (bool) $event->jumlah_tamu],
+        ];
+        $done = collect($checklist)->where('done', true)->count();
+        $total = count($checklist);
+        $persen = round(($done / $total) * 100);
+    @endphp
+
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="font-semibold text-gray-800 dark:text-gray-100">Progress Persiapan</h2>
+            <span class="text-sm font-semibold text-coral">{{ $persen }}%</span>
+        </div>
+        <div class="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2.5 mb-4">
+            <div class="bg-coral h-2.5 rounded-full transition-all" style="width: {{ $persen }}%"></div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            @foreach ($checklist as $item)
+                <div class="flex items-center gap-2 text-sm {{ $item['done'] ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400' }}">
+                    @if ($item['done'])
+                        <span class="text-green-500">✓</span>
+                    @else
+                        <span class="text-gray-300 dark:text-gray-600">○</span>
+                    @endif
+                    {{ $item['label'] }}
+                </div>
+            @endforeach
         </div>
     </div>
 
@@ -90,6 +148,53 @@
             </div>
         </div>
     @endif
+
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="font-semibold text-gray-800 dark:text-gray-100">Checklist Persiapan</h2>
+            <span class="text-xs text-gray-400">{{ $event->checklists->where('selesai', true)->count() }} / {{ $event->checklists->count() }} selesai</span>
+        </div>
+
+        <form method="POST" action="{{ route('checklists.store', $event) }}" class="flex gap-2 mb-4">
+            @csrf
+            <input type="text" name="tugas" placeholder="Tambah tugas baru..." required
+                   class="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
+            <button type="submit"
+                    class="bg-coral hover:bg-red-400 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
+                + Tambah
+            </button>
+        </form>
+
+        @if ($event->checklists->isEmpty())
+            <p class="text-sm text-gray-400">Belum ada checklist. Tambahkan tugas persiapan di atas.</p>
+        @else
+            <div class="space-y-2">
+                @foreach ($event->checklists as $item)
+                    <div class="flex items-center gap-3 py-2 border-b border-gray-50 dark:border-gray-800 last:border-0">
+                        <form method="POST" action="{{ route('checklists.toggle', [$event, $item]) }}">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit"
+                                    class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition
+                                    {{ $item->selesai ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 dark:border-gray-600' }}">
+                                @if ($item->selesai)
+                                    <span class="text-xs">✓</span>
+                                @endif
+                            </button>
+                        </form>
+                        <span class="flex-1 text-sm {{ $item->selesai ? 'line-through text-gray-400' : 'text-gray-700 dark:text-gray-300' }}">
+                            {{ $item->tugas }}
+                        </span>
+                        <form method="POST" action="{{ route('checklists.destroy', [$event, $item]) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-gray-300 dark:text-gray-600 hover:text-red-500 text-sm">✕</button>
+                        </form>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
 
     <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
         <h2 class="font-semibold text-gray-800 dark:text-gray-100 mb-4">Rundown Acara</h2>

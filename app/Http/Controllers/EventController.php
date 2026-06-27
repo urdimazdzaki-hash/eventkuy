@@ -20,8 +20,7 @@ class EventController extends Controller
         $totalEvent = $events->count();
         $eventAktif = $events->filter(fn ($e) => $e->hari_menuju_event >= 0)->count();
         $totalAnggaran = $events->sum(fn ($e) => $e->total_anggaran);
-        $upcomingEvents = $events->filter(fn ($e) => $e->hari_menuju_event >= 0)->take(3);
-
+       $upcomingEvents = $events->filter(fn ($e) => $e->hari_menuju_event >= 0)->take(3);
         return view('events.index', compact(
             'events',
             'totalEvent',
@@ -108,13 +107,13 @@ class EventController extends Controller
     }
 
     public function show(Event $event)
-    {
-        $this->authorizeEvent($event);
+{
+    $this->authorizeEvent($event);
 
-        $event->load(['rundowns', 'budgetItems']);
+    $event->load(['rundowns', 'budgetItems', 'checklists']);
 
-        return view('events.show', compact('event'));
-    }
+    return view('events.show', compact('event'));
+}
 
     public function edit(Event $event)
     {

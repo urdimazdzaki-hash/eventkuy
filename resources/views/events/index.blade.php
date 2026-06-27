@@ -22,14 +22,17 @@
                 <img src="{{ asset('images/wedding-banner.jpg') }}" alt="Wedding banner" class="w-full h-full object-cover" style="object-position: 50% 30%;">
                 <div class="absolute inset-0 bg-gradient-to-r from-coral/60 to-red-400/50"></div>
             </div>
-            <div class="relative z-10">
-                <p class="text-white/70 text-xs font-medium uppercase tracking-wide mb-1">Acara Terdekat</p>
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <div class="flex items-center gap-2 mb-1">
+                    <p class="text-white/70 text-xs font-medium uppercase tracking-wide">Acara Terdekat</p>
+                    <span class="text-white/70 text-xs">&middot; H-{{ $eventTerdekat->hari_menuju_event }}</span>
+                </div>
                 <h2 class="text-white text-xl font-bold mb-1">{{ $eventTerdekat->nama_event }}</h2>
                 <p class="text-white/70 text-sm mb-5">
                     <i data-lucide="map-pin" class="w-3 h-3 inline mr-1"></i>
                     {{ $eventTerdekat->lokasi_venue ?? 'Lokasi belum diset' }} &middot; {{ $eventTerdekat->tanggal_event->translatedFormat('d F Y') }}
                 </p>
-                <div class="flex gap-3">
+                <div class="flex gap-3 justify-center">
                     <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
                         <p id="countdown-hari" class="text-2xl font-bold text-white">--</p>
                         <p class="text-white/70 text-xs">Hari</p>

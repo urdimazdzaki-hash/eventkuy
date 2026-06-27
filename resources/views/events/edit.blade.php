@@ -23,7 +23,6 @@
         @csrf
         @method('PUT')
 
-        {{-- Hidden input untuk nama_paket & fasilitas_paket --}}
         <input type="hidden" id="inputNamaPaket" name="nama_paket" value="{{ old('nama_paket', $event->nama_paket) }}">
         <input type="hidden" id="inputFasilitasPaket" name="fasilitas_paket" value="{{ old('fasilitas_paket', $event->fasilitas_paket) }}">
 
@@ -82,12 +81,11 @@
                             class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coral">
                         <option value="custom">Custom (isi manual)</option>
                         <option value="silver" {{ old('nama_paket', $event->nama_paket) == 'silver' ? 'selected' : '' }}>Silver — 300 pax (Rp 250 Juta)</option>
-                        <option value="gold"   {{ old('nama_paket', $event->nama_paket) == 'gold'   ? 'selected' : '' }}>Gold — 500 pax (Rp 450 Juta)</option>
+                        <option value="gold" {{ old('nama_paket', $event->nama_paket) == 'gold' ? 'selected' : '' }}>Gold — 500 pax (Rp 450 Juta)</option>
                         <option value="platinum" {{ old('nama_paket', $event->nama_paket) == 'platinum' ? 'selected' : '' }}>Platinum — 1.000 pax (Rp 850 Juta)</option>
                         <option value="diamond" {{ old('nama_paket', $event->nama_paket) == 'diamond' ? 'selected' : '' }}>Diamond — 2.000 pax (Rp 1,5 Miliar)</option>
                     </select>
 
-                    {{-- Card fasilitas muncul di sini --}}
                     <div id="cardFasilitas" class="mt-3 hidden bg-amber-50 dark:bg-gray-800 border border-amber-200 dark:border-gray-700 rounded-xl p-4">
                         <p id="judulPaket" class="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-2"></p>
                         <ul id="listFasilitas" class="space-y-1"></ul>
@@ -228,9 +226,9 @@
         const container = document.getElementById('rundownContainer');
         const div = document.createElement('div');
         div.className = 'grid grid-cols-12 gap-2 items-start';
-        const waktu    = data ? data.waktu    : '';
+        const waktu = data ? data.waktu : '';
         const kegiatan = data ? data.kegiatan : '';
-        const pic      = data && data.pic ? data.pic : '';
+        const pic = data && data.pic ? data.pic : '';
         div.innerHTML = `
             <input type="time" name="rundown[${rundownIndex}][waktu]" value="${waktu}" class="col-span-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
             <input type="text" name="rundown[${rundownIndex}][kegiatan]" value="${kegiatan}" placeholder="Kegiatan" class="col-span-5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
@@ -248,7 +246,7 @@
         const div = document.createElement('div');
         div.className = 'grid grid-cols-12 gap-2 items-start';
         const namaItem = data ? data.nama_item : '';
-        const biaya    = data ? data.estimasi_biaya : '';
+        const biaya = data ? data.estimasi_biaya : '';
         div.innerHTML = `
             <input type="text" name="anggaran[${anggaranIndex}][nama_item]" value="${namaItem}" placeholder="Nama item" class="col-span-7 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
             <input type="number" name="anggaran[${anggaranIndex}][estimasi_biaya]" value="${biaya}" placeholder="Biaya (Rp)" min="0" oninput="hitungTotalAnggaran()" class="col-span-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
@@ -259,65 +257,62 @@
     }
 
     function pilihPaket() {
-        const select     = document.getElementById('paketTamu');
-        const inputTamu  = document.getElementById('jumlahTamu');
+        const select = document.getElementById('paketTamu');
+        const inputTamu = document.getElementById('jumlahTamu');
         const inputHarga = document.getElementById('hargaPerOrang');
-        const card       = document.getElementById('cardFasilitas');
-        const judul      = document.getElementById('judulPaket');
-        const listEl     = document.getElementById('listFasilitas');
+        const card = document.getElementById('cardFasilitas');
+        const judul = document.getElementById('judulPaket');
+        const listEl = document.getElementById('listFasilitas');
 
         if (select.value === 'custom') {
-            inputTamu.readOnly  = false;
+            inputTamu.readOnly = false;
             inputHarga.readOnly = false;
             card.classList.add('hidden');
-            document.getElementById('inputNamaPaket').value      = '';
+            document.getElementById('inputNamaPaket').value = '';
             document.getElementById('inputFasilitasPaket').value = '';
         } else {
             const paket = dataPaket[select.value];
-            inputTamu.value     = paket.pax;
-            inputHarga.value    = Math.round(paket.total / paket.pax);
-            inputTamu.readOnly  = true;
+            inputTamu.value = paket.pax;
+            inputHarga.value = Math.round(paket.total / paket.pax);
+            inputTamu.readOnly = true;
             inputHarga.readOnly = true;
 
-            // Tampilkan card fasilitas
             judul.textContent = '✨ ' + paket.nama;
-            listEl.innerHTML  = paket.fasilitas
+            listEl.innerHTML = paket.fasilitas
                 .map(f => `<li class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                     <span class="text-green-500">✓</span> ${f}
                 </li>`)
                 .join('');
             card.classList.remove('hidden');
 
-            // Simpan ke hidden input
-            document.getElementById('inputNamaPaket').value      = select.value;
+            document.getElementById('inputNamaPaket').value = select.value;
             document.getElementById('inputFasilitasPaket').value = paket.fasilitas.join('\n');
         }
         hitungSubtotalCatering();
     }
 
     function hitungSubtotalCatering() {
-        const tamu    = parseInt(document.getElementById('jumlahTamu').value) || 0;
-        const harga   = parseInt(document.getElementById('hargaPerOrang').value) || 0;
+        const tamu = parseInt(document.getElementById('jumlahTamu').value) || 0;
+        const harga = parseInt(document.getElementById('hargaPerOrang').value) || 0;
         const subtotal = tamu * harga;
-        document.getElementById('subtotalCatering').textContent      = 'Rp ' + subtotal.toLocaleString('id-ID');
-        document.getElementById('totalCateringDisplay').textContent  = 'Rp ' + subtotal.toLocaleString('id-ID');
+        document.getElementById('subtotalCatering').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
+        document.getElementById('totalCateringDisplay').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
         hitungTotalAnggaran();
     }
 
     function hitungTotalAnggaran() {
-        const tamu    = parseInt(document.getElementById('jumlahTamu').value) || 0;
-        const harga   = parseInt(document.getElementById('hargaPerOrang').value) || 0;
+        const tamu = parseInt(document.getElementById('jumlahTamu').value) || 0;
+        const harga = parseInt(document.getElementById('hargaPerOrang').value) || 0;
         const subtotalCatering = tamu * harga;
 
         const inputs = document.querySelectorAll('#anggaranContainer input[type="number"]');
         let totalItemLain = 0;
         inputs.forEach(input => totalItemLain += parseInt(input.value) || 0);
 
-        document.getElementById('totalItemLain').textContent  = 'Rp ' + totalItemLain.toLocaleString('id-ID');
-        document.getElementById('totalAnggaran').textContent  = 'Rp ' + (subtotalCatering + totalItemLain).toLocaleString('id-ID');
+        document.getElementById('totalItemLain').textContent = 'Rp ' + totalItemLain.toLocaleString('id-ID');
+        document.getElementById('totalAnggaran').textContent = 'Rp ' + (subtotalCatering + totalItemLain).toLocaleString('id-ID');
     }
 
-    
     if (rundownLama.length > 0) {
         rundownLama.forEach(item => tambahRundown(item));
         document.getElementById('rundownEmpty').style.display = 'none';
@@ -328,12 +323,13 @@
         document.getElementById('anggaranEmpty').style.display = 'none';
     }
 
-   const paketSelect = document.getElementById('paketTamu');
-const namaPaketLama = "{{ old('nama_paket', $event->nama_paket) }}";
-if (namaPaketLama && dataPaket[namaPaketLama]) {
-    paketSelect.value = namaPaketLama;
-    pilihPaket();
-} else {
-    hitungSubtotalCatering();
-}
+    const paketSelect = document.getElementById('paketTamu');
+    const namaPaketLama = "{{ old('nama_paket', $event->nama_paket) }}";
+    if (namaPaketLama && dataPaket[namaPaketLama]) {
+        paketSelect.value = namaPaketLama;
+        pilihPaket();
+    } else {
+        hitungSubtotalCatering();
+    }
+</script>
 @endsection

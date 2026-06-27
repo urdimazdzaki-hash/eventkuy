@@ -318,7 +318,34 @@
         document.getElementById('totalAnggaran').textContent = 'Rp ' + (subtotalCatering + totalItemLain).toLocaleString('id-ID');
     }
 
-    tambahRundown();
+    const templateRundown = [
+        { waktu: '07:00', kegiatan: 'Persiapan Venue & Dekorasi (s.d 09.00)', pic: 'EO & Vendor' },
+        { waktu: '08:00', kegiatan: 'Persiapan Pengantin (s.d 10.00)', pic: 'MUA' },
+        { waktu: '09:00', kegiatan: 'Gladi Bersih Acara (s.d 10.00)', pic: 'EO' },
+        { waktu: '10:00', kegiatan: 'Briefing Seluruh Vendor (s.d 10.30)', pic: 'Event Director' },
+        { waktu: '10:30', kegiatan: 'Pembukaan oleh MC (s.d 10.40)', pic: 'MC' },
+        { waktu: '10:40', kegiatan: "Pembacaan Ayat Suci Al-Qur'an (s.d 10.45)", pic: 'Qori' },
+        { waktu: '10:45', kegiatan: 'Sambutan Keluarga (s.d 10.50)', pic: 'Perwakilan Keluarga' },
+        { waktu: '10:50', kegiatan: 'Prosesi Akad Nikah (s.d 11.15)', pic: 'Penghulu' },
+        { waktu: '11:15', kegiatan: 'Penandatanganan Dokumen (s.d 11.20)', pic: 'Pengantin' },
+        { waktu: '11:20', kegiatan: 'Doa Pernikahan (s.d 11.30)', pic: 'Ustadz' },
+        { waktu: '11:30', kegiatan: 'Sungkeman kepada Orang Tua (s.d 11.45)', pic: 'Pengantin' },
+        { waktu: '11:45', kegiatan: 'Grand Entrance Pengantin (s.d 12.00)', pic: 'EO' },
+        { waktu: '12:00', kegiatan: 'Ucapan Syukur Pengantin (s.d 12.10)', pic: 'Pengantin' },
+        { waktu: '12:10', kegiatan: 'Tausiyah Singkat Pernikahan (s.d 12.20)', pic: 'Ustadz' },
+        { waktu: '12:20', kegiatan: 'Doa Bersama (s.d 12.30)', pic: 'Ustadz' },
+        { waktu: '12:30', kegiatan: 'Ramah Tamah & Jamuan Makan (s.d 14.30)', pic: 'Catering' },
+        { waktu: '12:30', kegiatan: 'Live Gambus / Instrumental Islami (s.d 14.30)', pic: 'Entertainment' },
+        { waktu: '14:30', kegiatan: 'Foto Bersama Tamu Undangan (s.d 16.30)', pic: 'Dokumentasi' },
+        { waktu: '14:30', kegiatan: 'Silaturahmi Keluarga & Kerabat (s.d 16.30)', pic: 'EO' },
+        { waktu: '14:30', kegiatan: 'Hiburan Akustik Islami (s.d 16.30)', pic: 'Entertainment' },
+        { waktu: '16:30', kegiatan: 'Ucapan Terima Kasih (s.d 16.40)', pic: 'MC' },
+        { waktu: '16:40', kegiatan: 'Doa Penutup (s.d 16.50)', pic: 'Ustadz' },
+        { waktu: '16:50', kegiatan: 'Pelepasan Tamu Kehormatan (s.d 17.00)', pic: 'EO' },
+        { waktu: '17:00', kegiatan: 'Acara Selesai', pic: 'Semua Tim' },
+    ];
+
+    templateRundown.forEach(item => tambahRundown(item));
     tambahAnggaran();
 </script>
 @endsection

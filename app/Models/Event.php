@@ -76,7 +76,7 @@ class Event extends Model
 
     public function getHariMenujuEventAttribute(): int
     {
-        return now()->startOfDay()->diffInDays($this->tanggal_event, false);
+        return (int) floor(now()->diffInHours($this->tanggal_event, false) / 24);
     }
 
     public function getButuhCekCuacaAttribute(): bool

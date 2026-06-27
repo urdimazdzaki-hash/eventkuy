@@ -17,10 +17,10 @@
 
     @php $eventTerdekat = $upcomingEvents->first(); @endphp
     @if ($eventTerdekat)
-        <div class="relative bg-gradient-to-r from-coral to-red-400 rounded-2xl p-6 mb-6 overflow-hidden">
-            <div class="absolute inset-0 opacity-10">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                <div class="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        <div class="relative rounded-2xl p-6 mb-6 overflow-hidden">
+            <div class="absolute inset-0">
+                <img src="{{ asset('images/wedding-banner.jpg') }}" alt="Wedding banner" class="w-full h-full object-cover" style="object-position: 50% 30%;">
+                <div class="absolute inset-0 bg-gradient-to-r from-coral/60 to-red-400/50"></div>
             </div>
             <div class="relative z-10">
                 <p class="text-white/70 text-xs font-medium uppercase tracking-wide mb-1">Acara Terdekat</p>

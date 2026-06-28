@@ -253,11 +253,26 @@
                                     </p>
                                 </div>
                             </div>
-                            @if ($event->butuh_cek_cuaca)
-                                <span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full whitespace-nowrap">
-                                    H-{{ $event->hari_menuju_event }}
-                                </span>
-                            @endif
+                          <div class="flex items-center gap-2">
+                                @if ($event->status_pembayaran === 'lunas')
+                                    <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                                        <i data-lucide="check-circle" class="w-3 h-3"></i> Lunas
+                                    </span>
+                                @elseif ($event->status_pembayaran === 'dp')
+                                    <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                                        <i data-lucide="credit-card" class="w-3 h-3"></i> DP
+                                    </span>
+                                @else
+                                    <span class="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                                        <i data-lucide="clock" class="w-3 h-3"></i> Belum Bayar
+                                    </span>
+                                @endif
+                                @if ($event->butuh_cek_cuaca)
+                                    <span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full whitespace-nowrap">
+                                        H-{{ $event->hari_menuju_event }}
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                     </a>
                 @endforeach

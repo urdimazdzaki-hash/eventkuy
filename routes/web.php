@@ -6,6 +6,7 @@ use App\Http\Controllers\RundownController;
 use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChecklistController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('events', EventController::class);
     Route::get('/rundowns', [RundownController::class, 'index'])->name('rundowns.index');
     Route::post('/events/{event}/checklists', [ChecklistController::class, 'store'])->name('checklists.store');
-   Route::patch('/events/{event}/checklists/{checklist}/toggle', [ChecklistController::class, 'toggle'])->name('checklists.toggle');
-   Route::delete('/events/{event}/checklists/{checklist}', [ChecklistController::class, 'destroy'])->name('checklists.destroy');
+    Route::patch('/events/{event}/checklists/{checklist}/toggle', [ChecklistController::class, 'toggle'])->name('checklists.toggle');
+    Route::delete('/events/{event}/checklists/{checklist}', [ChecklistController::class, 'destroy'])->name('checklists.destroy');
+    Route::get('/events/{event}/payment', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/events/{event}/payment', [PaymentController::class, 'confirm'])->name('payment.confirm');
 });

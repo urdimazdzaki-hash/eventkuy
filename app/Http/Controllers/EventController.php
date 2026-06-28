@@ -102,8 +102,8 @@ class EventController extends Controller
             }
         }
 
-        return redirect()->route('events.show', $event)
-            ->with('success', 'Event berhasil dibuat!');
+        return redirect()->route('payment.show', $event)
+            ->with('success', 'Event berhasil dibuat! Silakan konfirmasi pembayaran DP.');
     }
 
     public function show(Event $event)

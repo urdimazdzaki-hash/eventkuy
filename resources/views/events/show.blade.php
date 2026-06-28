@@ -245,5 +245,52 @@
         </div>
     </div>
 
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="font-semibold text-gray-800 dark:text-gray-100">Status Pembayaran</h2>
+            @php
+                $badgeClass = match($event->status_pembayaran) {
+                    'lunas' => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                    'dp' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                    default => 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+                };
+                $badgeLabel = match($event->status_pembayaran) {
+                    'lunas' => 'Lunas',
+                    'dp' => 'DP',
+                    default => 'Belum Bayar',
+                };
+            @endphp
+            <span class="text-xs font-semibold px-3 py-1 rounded-full {{ $badgeClass }}">{{ $badgeLabel }}</span>
+        </div>
+
+        <div class="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2.5 mb-4">
+            <div class="bg-coral h-2.5 rounded-full transition-all" style="width: {{ $event->persen_terbayar }}%"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 text-sm mb-4">
+            <div>
+                <p class="text-gray-400">Total Anggaran</p>
+                <p class="font-semibold text-gray-800 dark:text-gray-100">Rp {{ number_format($event->total_anggaran, 0, ',', '.') }}</p>
+            </div>
+            <div>
+                <p class="text-gray-400">Sudah Dibayar</p>
+                <p class="font-semibold text-green-600">Rp {{ number_format($event->jumlah_dibayar ?? 0, 0, ',', '.') }}</p>
+            </div>
+            <div>
+                <p class="text-gray-400">Sisa Pembayaran</p>
+                <p class="font-semibold text-coral">Rp {{ number_format($event->sisa_pembayaran, 0, ',', '.') }}</p>
+            </div>
+        </div>
+
+        @if ($event->status_pembayaran !== 'lunas')
+            <a href="{{ route('payment.show', $event) }}"
+               class="inline-block bg-coral hover:bg-red-400 text-white text-sm font-semibold px-5 py-2 rounded-xl transition">
+                + Tambah Pembayaran
+            </a>
+        @else
+            <p class="text-sm text-green-600 font-medium">✓ Pembayaran lunas pada {{ $event->paid_at ? \Carbon\Carbon::parse($event->paid_at)->translatedFormat('d F Y') : '-' }}</p>
+        @endif
+    </div>
+
 </div>
 @endsection

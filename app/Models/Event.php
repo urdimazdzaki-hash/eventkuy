@@ -26,6 +26,9 @@ class Event extends Model
         'latitude',
         'longitude',
         'catatan',
+        'status_pembayaran',
+        'jumlah_dibayar',
+        'paid_at',
     ];
 
     protected function casts(): array
@@ -63,6 +66,19 @@ class Event extends Model
     public function getTotalAnggaranAttribute(): int
     {
         return $this->subtotal_catering + $this->budgetItems->sum('estimasi_biaya');
+    }
+
+    public function getSisaPembayaranAttribute(): int
+    {
+        return max(0, $this->total_anggaran - ($this->jumlah_dibayar ?? 0));
+    }
+
+    public function getPersenTerbayarAttribute(): int
+    {
+        if ($this->total_anggaran <= 0) {
+            return 0;
+        }
+        return min(100, round((($this->jumlah_dibayar ?? 0) / $this->total_anggaran) * 100));
     }
 
     public function getDaftarFasilitasAttribute(): array

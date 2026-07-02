@@ -121,7 +121,7 @@
             @else
                 <div class="space-y-3">
                     @foreach ($upcomingEvents as $event)
-                        <a href="{{ route('events.show', $event) }}" class="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl p-2 -mx-2">
+                        <a href="{{ route('events.show', $event) }}" class="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl p-2 -mx-2 transition-all duration-200">
                             <div class="w-11 h-11 rounded-xl bg-coral/10 text-coral flex items-center justify-center font-semibold flex-shrink-0">
                                 {{ strtoupper(substr($event->nama_event, 0, 1)) }}
                             </div>
@@ -236,10 +236,10 @@
             <div class="grid gap-3">
                 @foreach ($events as $event)
                     <a href="{{ route('events.show', $event) }}"
-                       class="block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 hover:shadow-md transition">
+                       class="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 hover:shadow-xl hover:-translate-y-1 hover:border-coral/30 transition-all duration-300">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-coral/10 text-coral flex items-center justify-center font-semibold">
+                                <div class="w-10 h-10 rounded-xl bg-coral/10 text-coral flex items-center justify-center font-semibold transition-all duration-300 group-hover:bg-coral group-hover:text-white">
                                     {{ strtoupper(substr($event->nama_event, 0, 1)) }}
                                 </div>
                                 <div>

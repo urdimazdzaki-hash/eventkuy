@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
@@ -11,7 +12,8 @@ class VendorController extends Controller
      */
     public function index()
     {
-        //
+        $vendors = Vendor::latest()->get();
+        return view('vendors.index', compact('vendors'));
     }
 
     /**
@@ -19,7 +21,7 @@ class VendorController extends Controller
      */
     public function create()
     {
-        //
+        return view('vendors.create');
     }
 
     /**
@@ -27,38 +29,65 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_vendor' => 'required|string|max:255',
+            'kategori' => 'required|string|max:100',
+            'kontak' => 'nullable|string|max:100',
+            'alamat' => 'nullable|string',
+            'harga' => 'required|numeric',
+            'keterangan' => 'nullable|string',
+        ]);
+
+        Vendor::create($request->all());
+
+        return redirect()->route('vendors.index')
+            ->with('success', 'Vendor berhasil ditambahkan.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Vendor $vendor)
     {
-        //
+        return view('vendors.show', compact('vendor'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Vendor $vendor)
     {
-        //
+        return view('vendors.edit', compact('vendor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Vendor $vendor)
     {
-        //
+        $request->validate([
+            'nama_vendor' => 'required|string|max:255',
+            'kategori' => 'required|string|max:100',
+            'kontak' => 'nullable|string|max:100',
+            'alamat' => 'nullable|string',
+            'harga' => 'required|numeric',
+            'keterangan' => 'nullable|string',
+        ]);
+
+        $vendor->update($request->all());
+
+        return redirect()->route('vendors.index')
+            ->with('success', 'Vendor berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Vendor $vendor)
     {
-        //
+        $vendor->delete();
+
+        return redirect()->route('vendors.index')
+            ->with('success', 'Vendor berhasil dihapus.');
     }
 }

@@ -1,9 +1,16 @@
 <!DOCTYPE html>
-<html lang="id" class="{{ session('theme', 'light') === 'dark' ? 'dark' : '' }}">
+<html lang="id" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'EventKuy')</title>
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark' ||
+            (!localStorage.getItem('theme') && '{{ session('theme', 'light') }}' === 'dark')) {
+            document.getElementById('html-root').classList.add('dark');
+        }
+    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -30,25 +37,13 @@
 
     <style>
         @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-16px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-16px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .animate-fade-slide-up {
@@ -67,9 +62,21 @@
         .delay-400 { animation-delay: 0.4s; }
         .delay-500 { animation-delay: 0.5s; }
         .delay-600 { animation-delay: 0.6s; }
+
+        html {
+            transition: background-color 0.4s ease;
+        }
+
+        body, aside, main {
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .animate-fade-slide-up, .animate-fade-slide-in {
+            transition: none !important;
+        }
     </style>
 </head>
-<body class="font-sans bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors duration-200">
+<body class="font-sans bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100">
 
     @if (session('success'))
         <div id="notif-success" class="fixed top-4 right-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 px-4 py-3 rounded-lg shadow z-50">
@@ -136,24 +143,16 @@
                 </nav>
 
                 <div class="px-4 py-4 border-t border-gray-100 dark:border-gray-800">
-                    <form method="POST" action="{{ route('theme.toggle') }}" class="mb-3">
-                        @csrf
-                        <button type="submit"
-                            class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                @if(session('theme', 'light') === 'dark')
-                                    <i data-lucide="sun" class="w-4 h-4 text-yellow-400"></i>
-                                    <span>Mode Terang</span>
-                                @else
-                                    <i data-lucide="moon" class="w-4 h-4 text-gray-500"></i>
-                                    <span>Mode Gelap</span>
-                                @endif
-                            </div>
-                            <div class="w-8 h-4 rounded-full relative transition-colors {{ session('theme', 'light') === 'dark' ? 'bg-coral' : 'bg-gray-300' }}">
-                                <div class="w-3 h-3 bg-white rounded-full absolute top-0.5 transition-all {{ session('theme', 'light') === 'dark' ? 'left-4' : 'left-0.5' }}"></div>
-                            </div>
-                        </button>
-                    </form>
+                    <button onclick="toggleTheme()"
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition mb-3">
+                        <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400" id="theme-label">
+                            <i data-lucide="moon" class="w-4 h-4 text-gray-500" id="theme-icon"></i>
+                            <span id="theme-text">Mode Gelap</span>
+                        </div>
+                        <div class="w-8 h-4 rounded-full relative transition-colors duration-300" id="theme-toggle-bg">
+                            <div class="w-3 h-3 bg-white rounded-full absolute top-0.5 transition-all duration-300" id="theme-toggle-dot"></div>
+                        </div>
+                    </button>
 
                     <div class="flex items-center gap-3 px-2 mb-3">
                         <div class="w-9 h-9 rounded-full bg-coral/10 text-coral flex items-center justify-center font-semibold">
@@ -181,30 +180,58 @@
         </div>
     @else
         <div class="fixed top-4 right-4 z-50">
-            <form method="POST" action="{{ route('theme.toggle') }}">
-                @csrf
-                <button type="submit"
-                    class="flex items-center justify-between gap-3 px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm transition">
-                    <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        @if(session('theme', 'light') === 'dark')
-                            <i data-lucide="sun" class="w-4 h-4 text-yellow-400"></i>
-                            <span>Mode Terang</span>
-                        @else
-                            <i data-lucide="moon" class="w-4 h-4 text-gray-500"></i>
-                            <span>Mode Gelap</span>
-                        @endif
-                    </div>
-                    <div class="w-8 h-4 rounded-full relative transition-colors {{ session('theme', 'light') === 'dark' ? 'bg-coral' : 'bg-gray-300' }}">
-                        <div class="w-3 h-3 bg-white rounded-full absolute top-0.5 transition-all {{ session('theme', 'light') === 'dark' ? 'left-4' : 'left-0.5' }}"></div>
-                    </div>
-                </button>
-            </form>
+            <button onclick="toggleTheme()"
+                class="flex items-center justify-between gap-3 px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm transition">
+                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                    <i data-lucide="moon" class="w-4 h-4 text-gray-500" id="theme-icon-guest"></i>
+                    <span id="theme-text-guest">Mode Gelap</span>
+                </div>
+                <div class="w-8 h-4 rounded-full relative transition-colors duration-300" id="theme-toggle-bg-guest">
+                    <div class="w-3 h-3 bg-white rounded-full absolute top-0.5 transition-all duration-300" id="theme-toggle-dot-guest"></div>
+                </div>
+            </button>
         </div>
         @yield('content')
     @endauth
 
     <script>
         lucide.createIcons();
+
+        function updateThemeUI(isDark) {
+            const html = document.getElementById('html-root');
+            const icon = document.getElementById('theme-icon') || document.getElementById('theme-icon-guest');
+            const text = document.getElementById('theme-text') || document.getElementById('theme-text-guest');
+            const bg = document.getElementById('theme-toggle-bg') || document.getElementById('theme-toggle-bg-guest');
+            const dot = document.getElementById('theme-toggle-dot') || document.getElementById('theme-toggle-dot-guest');
+
+            if (isDark) {
+                html.classList.add('dark');
+                if (icon) { icon.setAttribute('data-lucide', 'sun'); icon.className = 'w-4 h-4 text-yellow-400'; }
+                if (text) text.textContent = 'Mode Terang';
+                if (bg) bg.style.backgroundColor = '#FF6B6B';
+                if (dot) dot.style.left = '1rem';
+            } else {
+                html.classList.remove('dark');
+                if (icon) { icon.setAttribute('data-lucide', 'moon'); icon.className = 'w-4 h-4 text-gray-500'; }
+                if (text) text.textContent = 'Mode Gelap';
+                if (bg) bg.style.backgroundColor = '#D1D5DB';
+                if (dot) dot.style.left = '0.125rem';
+            }
+            lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            const isDark = document.getElementById('html-root').classList.contains('dark');
+            const newTheme = isDark ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            updateThemeUI(!isDark);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('theme');
+            const isDark = saved === 'dark' || (!saved && '{{ session('theme', 'light') }}' === 'dark');
+            updateThemeUI(isDark);
+        });
     </script>
 </body>
 </html>

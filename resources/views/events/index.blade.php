@@ -4,7 +4,7 @@
 @section('content')
 <div class="max-w-6xl mx-auto px-8 py-8">
 
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex items-center justify-between mb-8 animate-fade-slide-up">
         <div>
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Dashboard</h1>
             <p class="text-gray-500 dark:text-gray-400">Kelola semua acara dan persiapan dengan mudah.</p>
@@ -17,7 +17,7 @@
 
     @php $eventTerdekat = $upcomingEvents->first(); @endphp
     @if ($eventTerdekat)
-        <div class="relative rounded-2xl p-6 mb-6 overflow-hidden">
+        <div class="relative rounded-2xl p-6 mb-6 overflow-hidden animate-fade-slide-up delay-100">
             <div class="absolute inset-0">
                 <img src="{{ asset('images/wedding-banner.jpg') }}" alt="Wedding banner" class="w-full h-full object-cover" style="object-position: 50% 30%;">
                 <div class="absolute inset-0 bg-gradient-to-r from-coral/60 to-red-400/50"></div>
@@ -84,31 +84,31 @@
         </script>
     @endif
 
-    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl mb-6 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 dark:divide-gray-800">
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl mb-6 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 dark:divide-gray-800 animate-fade-slide-up delay-200">
         <div class="p-5 relative">
             <div class="absolute top-5 right-5 w-7 h-7 rounded-lg bg-coral/10 text-coral flex items-center justify-center">
                 <i data-lucide="calendar-days" class="w-4 h-4"></i>
             </div>
-            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $totalEvent }}</p>
+            <p id="stat-total-event" class="text-2xl font-bold text-gray-800 dark:text-gray-100">0</p>
             <p class="text-sm text-gray-500">Total Acara</p>
         </div>
         <div class="p-5 relative">
             <div class="absolute top-5 right-5 w-7 h-7 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">
                 <i data-lucide="activity" class="w-4 h-4"></i>
             </div>
-            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $eventAktif }}</p>
+            <p id="stat-event-aktif" class="text-2xl font-bold text-gray-800 dark:text-gray-100">0</p>
             <p class="text-sm text-gray-500">Acara Aktif</p>
         </div>
         <div class="p-5 relative">
             <div class="absolute top-5 right-5 w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
                 <i data-lucide="wallet" class="w-4 h-4"></i>
             </div>
-            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">Rp {{ number_format($totalAnggaran, 0, ',', '.') }}</p>
+            <p id="stat-anggaran" class="text-2xl font-bold text-gray-800 dark:text-gray-100">Rp 0</p>
             <p class="text-sm text-gray-500">Total Anggaran</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6 animate-fade-slide-up delay-300">
 
         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-4">
@@ -194,7 +194,7 @@
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-6">
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-6 animate-fade-slide-up delay-400">
         <div class="flex items-center gap-2 mb-3">
             <i data-lucide="cloud-sun" class="w-5 h-5 text-blue-400"></i>
             <h3 class="font-semibold text-gray-800 dark:text-gray-100">Weather Alert</h3>
@@ -202,7 +202,7 @@
         <p class="text-sm text-gray-400">Menunggu integrasi modul cek cuaca (Mhs 3). Akan menampilkan peringatan otomatis saat acara H-3.</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-8">
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-8 animate-fade-slide-up delay-500">
         <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-4">Ringkasan Anggaran</h3>
         <div class="flex items-center gap-8">
             <div>
@@ -219,7 +219,7 @@
         </div>
     </div>
 
-    <div>
+    <div class="animate-fade-slide-up delay-600">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">Semua Acara</h2>
             <a href="{{ route('events.create') }}"
@@ -253,7 +253,7 @@
                                     </p>
                                 </div>
                             </div>
-                          <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2">
                                 @if ($event->status_pembayaran === 'lunas')
                                     <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
                                         <i data-lucide="check-circle" class="w-3 h-3"></i> Lunas
@@ -281,4 +281,37 @@
     </div>
 
 </div>
+
+<script>
+function animateCount(id, target, duration, isRupiah) {
+    const el = document.getElementById(id);
+    if (!el || target === 0) {
+        if (el) el.textContent = isRupiah ? 'Rp 0' : '0';
+        return;
+    }
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+        start += step;
+        if (start >= target) {
+            start = target;
+            clearInterval(timer);
+        }
+        if (isRupiah) {
+            el.textContent = 'Rp ' + Math.floor(start).toLocaleString('id-ID');
+        } else {
+            el.textContent = Math.floor(start);
+        }
+    }, 16);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        animateCount('stat-total-event', {{ $totalEvent }}, 1000, false);
+        animateCount('stat-event-aktif', {{ $eventAktif }}, 1000, false);
+        animateCount('stat-anggaran', {{ $totalAnggaran }}, 1500, true);
+    }, 400);
+});
+</script>
+
 @endsection

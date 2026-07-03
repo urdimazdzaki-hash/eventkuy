@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Vendor extends Model
 {
     protected $fillable = [
-        'name',
-        'category',
-        'contact',
-        'price',
+        'nama_vendor',
+        'kategori',
+        'kontak',
+        'alamat',
+        'harga',
+        'keterangan',
     ];
 }

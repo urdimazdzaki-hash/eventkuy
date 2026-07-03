@@ -13,6 +13,7 @@ class VendorController extends Controller
     public function index()
     {
         $vendors = Vendor::latest()->get();
+
         return view('vendors.index', compact('vendors'));
     }
 
@@ -38,7 +39,14 @@ class VendorController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        Vendor::create($request->all());
+        Vendor::create($request->only([
+            'nama_vendor',
+            'kategori',
+            'kontak',
+            'alamat',
+            'harga',
+            'keterangan',
+        ]));
 
         return redirect()->route('vendors.index')
             ->with('success', 'Vendor berhasil ditambahkan.');
@@ -74,7 +82,14 @@ class VendorController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        $vendor->update($request->all());
+        $vendor->update($request->only([
+            'nama_vendor',
+            'kategori',
+            'kontak',
+            'alamat',
+            'harga',
+            'keterangan',
+        ]));
 
         return redirect()->route('vendors.index')
             ->with('success', 'Vendor berhasil diperbarui.');

@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->string('contact');
-            $table->decimal('price', 12, 2);
+            $table->string('nama_vendor');
+            $table->string('kategori');
+            $table->string('kontak')->nullable();
+            $table->text('alamat')->nullable();
+            $table->decimal('harga', 12, 2);
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

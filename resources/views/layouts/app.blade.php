@@ -111,11 +111,12 @@
 
                     <p class="px-4 pt-5 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wide">Modul lain</p>
 
-                    <span class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 dark:text-gray-600 cursor-not-allowed">
-                        <i data-lucide="building-2" class="w-5 h-5"></i>
-                        Venue
-                        <span class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full ml-auto">Mhs 2</span>
-                    </span>
+                    <a href="{{ route('venues.index') }}"
+   class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('venues.*') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
+    <i data-lucide="building-2" class="w-5 h-5"></i>
+    Venue
+    <span class="text-[10px] bg-coral/10 text-coral px-2 py-0.5 rounded-full ml-auto">Mhs 2</span>
+</a>
 
                     <a href="{{ route('events.create') }}"
                        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('events.create') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
@@ -123,12 +124,12 @@
                         Acara
                     </a>
 
-                    <span class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 dark:text-gray-600 cursor-not-allowed">
-                        <i data-lucide="users" class="w-5 h-5"></i>
-                        Vendor
-                        <span class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full ml-auto">Mhs 2</span>
-                    </span>
-
+                    <a href="{{ route('vendors.index') }}"
+   class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('vendors.*') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
+    <i data-lucide="users" class="w-5 h-5"></i>
+    Vendor
+    <span class="text-[10px] bg-coral/10 text-coral px-2 py-0.5 rounded-full ml-auto">Mhs 2</span>
+</a>
                     <span class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 dark:text-gray-600 cursor-not-allowed">
                         <i data-lucide="cloud-rain" class="w-5 h-5"></i>
                         Cuaca

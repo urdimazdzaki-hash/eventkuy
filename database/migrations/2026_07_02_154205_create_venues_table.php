@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('venues', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('capacity');
-            $table->string('location');
-            $table->decimal('price', 12, 2);
+            $table->string('nama_venue');
+            $table->text('alamat');
+            $table->integer('kapasitas');
+            $table->decimal('harga', 12, 2);
+            $table->text('fasilitas')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

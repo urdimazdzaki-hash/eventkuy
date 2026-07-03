@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Venue extends Model
 {
     protected $fillable = [
-        'name',
-        'capacity',
-        'location',
-        'price',
+        'nama_venue',
+        'alamat',
+        'kapasitas',
+        'harga',
+        'fasilitas',
+        'keterangan',
     ];
 }

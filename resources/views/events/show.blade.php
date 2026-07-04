@@ -65,24 +65,36 @@
     @endphp
 
     <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
-        <div class="flex items-center justify-between mb-3">
-            <h2 class="font-semibold text-gray-800 dark:text-gray-100">Progress Persiapan</h2>
-            <span class="text-sm font-semibold text-coral">{{ $persen }}%</span>
-        </div>
-        <div class="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2.5 mb-4">
-            <div class="bg-coral h-2.5 rounded-full transition-all" style="width: {{ $persen }}%"></div>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            @foreach ($checklist as $item)
-                <div class="flex items-center gap-2 text-sm {{ $item['done'] ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400' }}">
-                    @if ($item['done'])
-                        <span class="text-green-500">✓</span>
-                    @else
-                        <span class="text-gray-300 dark:text-gray-600">○</span>
-                    @endif
-                    {{ $item['label'] }}
+        <h2 class="font-semibold text-gray-800 dark:text-gray-100 mb-4">Progress Persiapan</h2>
+        <div class="flex items-center gap-8">
+            <div class="relative flex-shrink-0">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="#F3F4F6" stroke-width="10"/>
+                    <circle id="progress-ring" cx="60" cy="60" r="50" fill="none"
+                        stroke="#FF6B6B" stroke-width="10"
+                        stroke-linecap="round"
+                        stroke-dasharray="314"
+                        stroke-dashoffset="314"
+                        transform="rotate(-90 60 60)"
+                        style="transition: stroke-dashoffset 1.2s ease;"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="progress-text" class="text-2xl font-bold text-coral">0%</span>
+                    <span class="text-xs text-gray-400">selesai</span>
                 </div>
-            @endforeach
+            </div>
+            <div class="flex-1 grid grid-cols-2 gap-2">
+                @foreach ($checklist as $item)
+                    <div class="flex items-center gap-2 text-sm {{ $item['done'] ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400' }}">
+                        @if ($item['done'])
+                            <span class="text-green-500">✓</span>
+                        @else
+                            <span class="text-gray-300 dark:text-gray-600">○</span>
+                        @endif
+                        {{ $item['label'] }}
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 
@@ -293,4 +305,32 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const target = {{ $persen }};
+    const circle = document.getElementById('progress-ring');
+    const text = document.getElementById('progress-text');
+    const circumference = 314;
+
+    let current = 0;
+    const duration = 1200;
+    const steps = 60;
+    const increment = target / steps;
+    const intervalTime = duration / steps;
+
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+
+        const offset = circumference - (current / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+        text.textContent = Math.round(current) + '%';
+    }, intervalTime);
+});
+</script>
+
 @endsection

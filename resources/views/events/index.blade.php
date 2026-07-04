@@ -10,7 +10,7 @@
             <p class="text-gray-500 dark:text-gray-400">Kelola semua acara dan persiapan dengan mudah.</p>
         </div>
         <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-full px-4 py-2">
-            <i data-lucide="calendar" class="w-4 h-4 text-coral"></i>
+            <i class="ph-duotone ph-calendar text-base text-coral"></i>
             <span>{{ now()->translatedFormat('l, d F Y') }}</span>
         </div>
     </div>
@@ -29,7 +29,7 @@
                 </div>
                 <h2 class="text-white text-xl font-bold mb-1">{{ $eventTerdekat->nama_event }}</h2>
                 <p class="text-white/70 text-sm mb-5">
-                    <i data-lucide="map-pin" class="w-3 h-3 inline mr-1"></i>
+                    <i class="ph-fill ph-map-pin text-sm inline mr-1"></i>
                     {{ $eventTerdekat->lokasi_venue ?? 'Lokasi belum diset' }} &middot; {{ $eventTerdekat->tanggal_event->translatedFormat('d F Y') }}
                 </p>
                 <div class="flex gap-3 justify-center">
@@ -87,21 +87,21 @@
     <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl mb-6 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 dark:divide-gray-800 animate-fade-slide-up delay-200">
         <div class="p-5 relative">
             <div class="absolute top-5 right-5 w-7 h-7 rounded-lg bg-coral/10 text-coral flex items-center justify-center">
-                <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                <i class="ph-duotone ph-calendar-check text-base"></i>
             </div>
             <p id="stat-total-event" class="text-2xl font-bold text-gray-800 dark:text-gray-100">0</p>
             <p class="text-sm text-gray-500">Total Acara</p>
         </div>
         <div class="p-5 relative">
             <div class="absolute top-5 right-5 w-7 h-7 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">
-                <i data-lucide="activity" class="w-4 h-4"></i>
+                <i class="ph-duotone ph-chart-line-up text-base"></i>
             </div>
             <p id="stat-event-aktif" class="text-2xl font-bold text-gray-800 dark:text-gray-100">0</p>
             <p class="text-sm text-gray-500">Acara Aktif</p>
         </div>
         <div class="p-5 relative">
             <div class="absolute top-5 right-5 w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
-                <i data-lucide="wallet" class="w-4 h-4"></i>
+                <i class="ph-duotone ph-money-wavy text-base"></i>
             </div>
             <p id="stat-anggaran" class="text-2xl font-bold text-gray-800 dark:text-gray-100">Rp 0</p>
             <p class="text-sm text-gray-500">Total Anggaran</p>
@@ -182,7 +182,7 @@
                 @else
                     @foreach ($events->sortByDesc('created_at')->take(3) as $event)
                         <div class="flex gap-2">
-                            <i data-lucide="bell" class="w-4 h-4 text-coral mt-0.5 flex-shrink-0"></i>
+                            <i class="ph-duotone ph-bell text-base text-coral mt-0.5 flex-shrink-0"></i>
                             <div>
                                 <p class="text-gray-700 dark:text-gray-300">Acara <span class="font-medium">{{ $event->nama_event }}</span> dibuat</p>
                                 <p class="text-xs text-gray-400">{{ $event->created_at->diffForHumans() }}</p>
@@ -196,7 +196,7 @@
 
     <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-6 animate-fade-slide-up delay-400">
         <div class="flex items-center gap-2 mb-3">
-            <i data-lucide="cloud-sun" class="w-5 h-5 text-blue-400"></i>
+            <i class="ph-duotone ph-cloud-sun text-xl text-blue-400"></i>
             <h3 class="font-semibold text-gray-800 dark:text-gray-100">Weather Alert</h3>
         </div>
         <p class="text-sm text-gray-400">Menunggu integrasi modul cek cuaca (Mhs 3). Akan menampilkan peringatan otomatis saat acara H-3.</p>
@@ -256,15 +256,15 @@
                             <div class="flex items-center gap-2">
                                 @if ($event->status_pembayaran === 'lunas')
                                     <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
-                                        <i data-lucide="check-circle" class="w-3 h-3"></i> Lunas
+                                        <i class="ph-fill ph-check-circle text-sm"></i> Lunas
                                     </span>
                                 @elseif ($event->status_pembayaran === 'dp')
                                     <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
-                                        <i data-lucide="credit-card" class="w-3 h-3"></i> DP
+                                        <i class="ph-duotone ph-credit-card text-sm"></i> DP
                                     </span>
                                 @else
                                     <span class="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
-                                        <i data-lucide="clock" class="w-3 h-3"></i> Belum Bayar
+                                        <i class="ph-duotone ph-clock text-sm"></i> Belum Bayar
                                     </span>
                                 @endif
                                 @if ($event->butuh_cek_cuaca)

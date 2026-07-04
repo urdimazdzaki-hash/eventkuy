@@ -86,4 +86,11 @@
         input.type = input.type === 'password' ? 'text' : 'password';
     }
 </script>
+<script>
+    const dir = sessionStorage.getItem('slideDirection');
+    if (dir) {
+        document.body.classList.add('slide-' + dir);
+        sessionStorage.removeItem('slideDirection');
+    }
+</script>
 @endsection

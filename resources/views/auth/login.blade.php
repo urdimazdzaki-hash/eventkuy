@@ -15,7 +15,6 @@
             }
         </style>
 
-        {{-- PANEL KIRI: LOGIN --}}
         <div id="panel-login" class="w-full md:w-1/2 px-10 py-12 flex flex-col justify-center absolute md:relative inset-0 z-10">
             <div class="text-center mb-8">
                 <h1 class="text-3xl mb-1">

@@ -13,8 +13,8 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -41,32 +41,18 @@
             from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes fadeSlideIn {
             from { opacity: 0; transform: translateX(-16px); }
             to { opacity: 1; transform: translateX(0); }
         }
-
-        @keyframes slideFromRight {
-            from { transform: translateX(60px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideFromLeft {
-            from { transform: translateX(-60px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
         .animate-fade-slide-up {
             animation: fadeSlideUp 0.5s ease forwards;
             opacity: 0;
         }
-
         .animate-fade-slide-in {
             animation: fadeSlideIn 0.4s ease forwards;
             opacity: 0;
         }
-
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
@@ -75,7 +61,6 @@
         .delay-600 { animation-delay: 0.6s; }
 
         html { transition: background-color 0.4s ease; }
-
         body, aside, main {
             transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
         }
@@ -84,43 +69,30 @@
             transition: width 0.3s ease, transform 0.3s ease;
             overflow: hidden;
         }
-
         #sidebar.collapsed {
             width: 0 !important;
             transform: translateX(-100%);
         }
+        .sidebar-text { transition: opacity 0.2s ease; }
+        #sidebar.collapsed .sidebar-text { opacity: 0; }
 
-        .sidebar-text {
-            transition: opacity 0.2s ease;
+        .theme-track {
+            background-color: #D1D5DB;
+            transition: background-color 0.3s ease;
         }
-
-        #sidebar.collapsed .sidebar-text {
-            opacity: 0;
-        }
-
-        #page-transition-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            pointer-events: none;
+        .theme-track.dark-mode {
             background-color: #FF6B6B;
-            opacity: 0;
-            transition: opacity 0.2s ease;
         }
-
-        #page-transition-overlay.animate-in {
-            opacity: 1;
-            pointer-events: all;
+        .theme-knob {
+            transform: translateX(0);
+            transition: transform 0.3s ease;
         }
-
-        #page-transition-overlay.animate-out {
-            opacity: 0;
+        .theme-knob.dark-mode {
+            transform: translateX(20px);
         }
     </style>
 </head>
 <body class="font-sans bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100">
-
-    <div id="page-transition-overlay"></div>
 
     @if (session('success'))
         <div id="notif-success" class="fixed top-4 right-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 px-4 py-3 rounded-lg shadow z-50">
@@ -147,7 +119,7 @@
                     </h1>
                     <button onclick="toggleSidebar()"
                         class="w-7 h-7 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-coral/10 hover:text-coral flex items-center justify-center text-gray-500 dark:text-gray-400 flex-shrink-0 transition">
-                        <i class="ph ph-caret-left text-base" id="sidebar-toggle-icon"></i>
+                        <i class="ph ph-caret-left text-base"></i>
                     </button>
                 </div>
 
@@ -158,13 +130,10 @@
                         <span class="sidebar-text">Dashboard</span>
                     </a>
 
-                    <p class="px-4 pt-5 pb-1 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wide sidebar-text">Modul lain</p>
-
                     <a href="{{ route('venues.index') }}"
                        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('venues.*') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
                         <i class="ph-duotone ph-buildings text-xl flex-shrink-0"></i>
                         <span class="sidebar-text">Venue</span>
-                        <span class="text-[10px] bg-coral/10 text-coral px-2 py-0.5 rounded-full ml-auto sidebar-text">Mhs 2</span>
                     </a>
 
                     <a href="{{ route('events.create') }}"
@@ -177,13 +146,11 @@
                        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('vendors.*') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
                         <i class="ph-duotone ph-users text-xl flex-shrink-0"></i>
                         <span class="sidebar-text">Vendor</span>
-                        <span class="text-[10px] bg-coral/10 text-coral px-2 py-0.5 rounded-full ml-auto sidebar-text">Mhs 2</span>
                     </a>
 
                     <span class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 dark:text-gray-600 cursor-not-allowed">
                         <i class="ph-duotone ph-cloud-rain text-xl flex-shrink-0"></i>
                         <span class="sidebar-text">Cuaca</span>
-                        <span class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full ml-auto sidebar-text">Mhs 3</span>
                     </span>
 
                     <a href="{{ route('rundowns.index') }}"
@@ -211,34 +178,33 @@
                     <i class="ph ph-caret-right text-base"></i>
                 </button>
 
-              <header class="h-14 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-end px-6 gap-3 flex-shrink-0">
+                <header class="h-14 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-end px-6 gap-3 flex-shrink-0">
 
-    <div class="flex items-center gap-2">
-        <i class="ph ph-sun text-lg text-gray-400 dark:text-yellow-400" id="theme-icon-sun"></i>
-        <button onclick="toggleTheme()" class="relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none" id="theme-toggle-btn" title="Ganti tema">
-            <span class="absolute inset-0 rounded-full bg-gray-300 dark:bg-coral transition-colors duration-300"></span>
-            <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-300 dark:translate-x-5" id="theme-toggle-knob"></span>
-        </button>
-        <i class="ph ph-moon text-lg text-gray-400 dark:text-gray-600" id="theme-icon-moon"></i>
-    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="ph ph-sun text-base text-yellow-400"></i>
+                        <button onclick="toggleTheme()" class="relative w-11 h-6 rounded-full focus:outline-none" title="Ganti tema">
+                            <span class="theme-track absolute inset-0 rounded-full" id="theme-track"></span>
+                            <span class="theme-knob absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow" id="theme-knob"></span>
+                        </button>
+                        <i class="ph ph-moon text-base text-gray-400"></i>
+                    </div>
 
-    <button class="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-coral/10 hover:text-coral flex items-center justify-center text-gray-500 dark:text-gray-400 transition"
-        title="Notifikasi">
-        <i class="ph-duotone ph-bell text-xl"></i>
-    </button>
+                    <button class="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-coral/10 hover:text-coral flex items-center justify-center text-gray-500 dark:text-gray-400 transition" title="Notifikasi">
+                        <i class="ph-duotone ph-bell text-xl"></i>
+                    </button>
 
-    <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1"></div>
+                    <div class="w-px h-6 bg-gray-200 dark:bg-gray-700"></div>
 
-    <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-full bg-coral text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
-            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-        </div>
-        <div class="text-sm">
-            <p class="font-medium text-gray-800 dark:text-gray-100 leading-tight">{{ Auth::user()->name }}</p>
-            <p class="text-gray-400 text-xs leading-tight">Event Organizer</p>
-        </div>
-    </div>
-</header>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-coral text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                        <div class="text-sm">
+                            <p class="font-medium text-gray-800 dark:text-gray-100 leading-tight">{{ Auth::user()->name }}</p>
+                            <p class="text-gray-400 text-xs leading-tight">Event Organizer</p>
+                        </div>
+                    </div>
+                </header>
 
                 <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-950">
                     @yield('content')
@@ -247,11 +213,14 @@
         </div>
     @else
         <div class="fixed top-4 right-4 z-50">
-            <button onclick="toggleTheme()"
-                class="flex items-center gap-3 px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm transition">
-                <i class="ph ph-moon text-lg text-gray-500" id="theme-icon-guest"></i>
-                <span id="theme-text-guest" class="text-sm text-gray-600 dark:text-gray-400">Mode Gelap</span>
-            </button>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
+                <i class="ph ph-sun text-base text-yellow-400"></i>
+                <button onclick="toggleTheme()" class="relative w-11 h-6 rounded-full focus:outline-none">
+                    <span class="theme-track absolute inset-0 rounded-full" id="theme-track-guest"></span>
+                    <span class="theme-knob absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow" id="theme-knob-guest"></span>
+                </button>
+                <i class="ph ph-moon text-base text-gray-400"></i>
+            </div>
         </div>
         @yield('content')
     @endauth
@@ -259,28 +228,25 @@
     <script>
         lucide.createIcons();
 
-    const overlay = document.getElementById('page-transition-overlay');
-
         function updateThemeUI(isDark) {
             const html = document.getElementById('html-root');
-            const icon = document.getElementById('theme-icon') || document.getElementById('theme-icon-guest');
-            const text = document.getElementById('theme-text') || document.getElementById('theme-text-guest');
+            const track = document.getElementById('theme-track') || document.getElementById('theme-track-guest');
+            const knob = document.getElementById('theme-knob') || document.getElementById('theme-knob-guest');
 
             if (isDark) {
                 html.classList.add('dark');
-                if (icon) icon.className = 'ph ph-sun text-lg text-yellow-400 flex-shrink-0';
-                if (text) text.textContent = 'Mode Terang';
+                if (track) track.classList.add('dark-mode');
+                if (knob) knob.classList.add('dark-mode');
             } else {
                 html.classList.remove('dark');
-                if (icon) icon.className = 'ph ph-moon text-lg text-gray-500 flex-shrink-0';
-                if (text) text.textContent = 'Mode Gelap';
+                if (track) track.classList.remove('dark-mode');
+                if (knob) knob.classList.remove('dark-mode');
             }
         }
 
         function toggleTheme() {
             const isDark = document.getElementById('html-root').classList.contains('dark');
-            const newTheme = isDark ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
             updateThemeUI(!isDark);
         }
 
@@ -314,39 +280,6 @@
                 if (sidebar) sidebar.classList.add('collapsed');
                 if (openBtn) { openBtn.classList.remove('hidden'); openBtn.style.display = 'flex'; }
             }
-
-            overlay.classList.add('animate-out');
-            setTimeout(() => {
-                overlay.classList.remove('animate-out');
-            }, 250);
-        });
-
-        document.querySelectorAll('a[href]').forEach(link => {
-            const href = link.getAttribute('href');
-            if (!href || href.startsWith('#') || href.startsWith('mailto')) return;
-            if (href.startsWith('http') && !href.includes(window.location.hostname)) return;
-
-            link.addEventListener('click', function(e) {
-                const target = this.getAttribute('href');
-                if (!target || target === window.location.pathname) return;
-
-                e.preventDefault();
-
-                const isGoingToRegister = target.includes('register');
-                const isGoingToLogin = target.includes('login');
-
-                if (isGoingToRegister) {
-                    sessionStorage.setItem('slideDirection', 'from-right');
-                } else if (isGoingToLogin) {
-                    sessionStorage.setItem('slideDirection', 'from-left');
-                }
-
-                overlay.classList.add('animate-in');
-
-                setTimeout(() => {
-                    window.location.href = target;
-                }, 200);
-            });
         });
     </script>
 </body>

@@ -7,7 +7,7 @@
     <div class="relative rounded-2xl p-8 mb-6 overflow-hidden">
         <div class="absolute inset-0">
             <img src="{{ asset('images/wedding-banner.jpg') }}" alt="Wedding banner" class="w-full h-full object-cover" style="object-position: 50% 30%;">
-            <div class="absolute inset-0 bg-gradient-to-r from-coral/60 to-red-400/50"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-coral/70 to-coral/40"></div>
         </div>
         <div class="relative z-10">
             <a href="{{ route('events.index') }}" class="text-white/70 hover:text-white text-sm mb-4 inline-block">&larr; Kembali ke Dashboard</a>
@@ -172,7 +172,7 @@
             <input type="text" name="tugas" placeholder="Tambah tugas baru..." required
                    class="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
             <button type="submit"
-                    class="bg-coral hover:bg-red-400 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
+                    class="bg-coral hover:bg-coral/90 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
                 + Tambah
             </button>
         </form>
@@ -296,7 +296,7 @@
 
         @if ($event->status_pembayaran !== 'lunas')
             <a href="{{ route('payment.show', $event) }}"
-               class="inline-block bg-coral hover:bg-red-400 text-white text-sm font-semibold px-5 py-2 rounded-xl transition">
+               class="inline-block bg-coral hover:bg-coral/90 text-white text-sm font-semibold px-5 py-2 rounded-xl transition">
                 + Tambah Pembayaran
             </a>
         @else

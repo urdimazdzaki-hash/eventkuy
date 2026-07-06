@@ -25,14 +25,12 @@
 
         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
             <h2 class="font-semibold text-gray-800 dark:text-gray-100 mb-4">Detail Acara</h2>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2">
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Nama Acara</label>
                     <input type="text" name="nama_event" value="{{ old('nama_event') }}" placeholder="Contoh: Pernikahan Syarif & Ranita"
                            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coral">
                 </div>
-
                 <div>
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Jenis Acara</label>
                     <select name="jenis_event"
@@ -42,7 +40,6 @@
                         <option value="lainnya" {{ old('jenis_event') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                     </select>
                 </div>
-
                 <div>
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Lokasi Acara</label>
                     <select name="tipe_lokasi"
@@ -52,26 +49,22 @@
                     </select>
                     <p class="text-xs text-gray-400 mt-1">Outdoor akan dipantau cuacanya otomatis (Mhs 3).</p>
                 </div>
-
                 <div>
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Tanggal Acara</label>
                     <input type="date" name="tanggal_event" value="{{ old('tanggal_event') }}"
                            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coral">
                 </div>
-
                 <div>
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Nama Lokasi/Venue</label>
                     <input type="text" name="lokasi_venue" value="{{ old('lokasi_venue') }}" placeholder="Contoh: Gedung Siliwangi"
                            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coral">
                 </div>
-
                 <div>
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Kota Venue</label>
                     <input type="text" name="kota_venue" value="{{ old('kota_venue') }}" placeholder="Contoh: Bandung"
                            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coral">
                     <p class="text-xs text-gray-400 mt-1">Dipakai modul cek cuaca (Mhs 3) untuk memantau H-3 acara.</p>
                 </div>
-
                 <div class="md:col-span-2">
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Catatan (opsional)</label>
                     <textarea name="catatan" rows="2" placeholder="Catatan tambahan tentang acara ini"
@@ -82,7 +75,6 @@
 
         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
             <h2 class="font-semibold text-gray-800 dark:text-gray-100 mb-4">Paket Wedding</h2>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div class="md:col-span-2">
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Pilih Paket</label>
@@ -95,8 +87,8 @@
                         <option value="diamond">👑 Diamond — 2.000 pax (Rp 1,5 Miliar)</option>
                     </select>
 
-                    <div id="fasilitasCard" class="hidden mt-3 bg-amber-50 dark:bg-gray-800 border border-amber-200 dark:border-gray-700 rounded-xl p-4">
-                        <p id="fasilitasNamaPaket" class="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1"></p>
+                    <div id="fasilitasCard" class="hidden mt-3 bg-coral/5 dark:bg-gray-800 border border-coral/20 dark:border-gray-700 rounded-xl p-4">
+                        <p id="fasilitasNamaPaket" class="text-sm font-semibold text-coral mb-1"></p>
                         <p id="fasilitasHarga" class="text-xs text-gray-500 dark:text-gray-400 mb-3"></p>
                         <ul id="fasilitasList" class="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-sm text-gray-700 dark:text-gray-300"></ul>
                     </div>
@@ -107,7 +99,6 @@
                     <input type="number" id="jumlahTamu" name="jumlah_tamu" value="{{ old('jumlah_tamu') }}" min="0" placeholder="Jumlah tamu (pax)" oninput="hitungSubtotalCatering()"
                            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-coral">
                 </div>
-
                 <div>
                     <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Harga per Orang (Rp)</label>
                     <input type="number" id="hargaPerOrang" name="harga_per_orang" value="{{ old('harga_per_orang') }}" min="0" placeholder="Otomatis dari paket" oninput="hitungSubtotalCatering()"
@@ -128,7 +119,6 @@
                 <button type="button" onclick="tambahRundown()"
                         class="text-sm text-coral hover:underline">+ Tambah Baris</button>
             </div>
-
             <div id="rundownContainer" class="space-y-3"></div>
             <p id="rundownEmpty" class="text-sm text-gray-400">Belum ada rundown. Klik "+ Tambah Baris" untuk mulai.</p>
         </div>
@@ -140,7 +130,6 @@
                         class="text-sm text-coral hover:underline">+ Tambah Item</button>
             </div>
             <p class="text-xs text-gray-400 mb-3">Item di luar paket, misal: souvenir tambahan, transportasi, dll.</p>
-
             <div id="anggaranContainer" class="space-y-3"></div>
             <p id="anggaranEmpty" class="text-sm text-gray-400">Belum ada item anggaran. Klik "+ Tambah Item" untuk mulai.</p>
 
@@ -166,7 +155,7 @@
                 Batal
             </a>
             <button type="submit"
-                    class="flex-1 bg-coral hover:bg-red-400 text-white font-semibold py-3 rounded-full transition">
+                    class="flex-1 bg-coral hover:opacity-90 text-white font-semibold py-3 rounded-full transition">
                 Simpan Acara
             </button>
         </div>
@@ -179,60 +168,32 @@
 
     const dataPaket = {
         silver: {
-            nama: 'Silver Package',
-            pax: 300,
-            total: 250000000,
-            fasilitas: [
-                'Venue Ballroom 6 Jam', 'Catering Premium 300 Pax', 'Dekorasi Standard Elegan',
-                'MC Profesional', 'Sound System Standard', 'Dokumentasi Foto', 'Bridal Room',
-                'Wedding Planner', 'Welcome Gate', 'Buku Tamu Digital'
-            ]
+            nama: 'Silver Package', pax: 300, total: 250000000,
+            fasilitas: ['Venue Ballroom 6 Jam','Catering Premium 300 Pax','Dekorasi Standard Elegan','MC Profesional','Sound System Standard','Dokumentasi Foto','Bridal Room','Wedding Planner','Welcome Gate','Buku Tamu Digital']
         },
         gold: {
-            nama: 'Gold Package',
-            pax: 500,
-            total: 450000000,
-            fasilitas: [
-                'Grand Ballroom 8 Jam', 'Catering Premium 500 Pax', 'Dekorasi Luxury Fresh Flower',
-                'MC Profesional', 'Live Music Acoustic', 'Sound System Premium', 'Foto & Video Dokumentasi',
-                'Bridal Room + Family Room', 'Wedding Organizer Full Service', 'Digital Invitation',
-                'Welcome Drink', 'Wedding Cake 3 Tier'
-            ]
+            nama: 'Gold Package', pax: 500, total: 450000000,
+            fasilitas: ['Grand Ballroom 8 Jam','Catering Premium 500 Pax','Dekorasi Luxury Fresh Flower','MC Profesional','Live Music Acoustic','Sound System Premium','Foto & Video Dokumentasi','Bridal Room + Family Room','Wedding Organizer Full Service','Digital Invitation','Welcome Drink','Wedding Cake 3 Tier']
         },
         platinum: {
-            nama: 'Platinum Package',
-            pax: 1000,
-            total: 850000000,
-            fasilitas: [
-                'Exclusive Ballroom 10 Jam', 'International Buffet 1.000 Pax', 'Dekorasi Luxury Exclusive',
-                'Fresh Flower Premium', 'LED Screen Stage', 'Live Band Performance', 'MC Profesional',
-                'Foto & Video Cinematic', 'Photobooth Unlimited', 'Content Creator Team',
-                '1 Executive Suite Room', 'Valet Parking', 'Wedding Cake 5 Tier', 'VIP Family Lounge'
-            ]
+            nama: 'Platinum Package', pax: 1000, total: 850000000,
+            fasilitas: ['Exclusive Ballroom 10 Jam','International Buffet 1.000 Pax','Dekorasi Luxury Exclusive','Fresh Flower Premium','LED Screen Stage','Live Band Performance','MC Profesional','Foto & Video Cinematic','Photobooth Unlimited','Content Creator Team','1 Executive Suite Room','Valet Parking','Wedding Cake 5 Tier','VIP Family Lounge']
         },
         diamond: {
-            nama: 'Diamond Package',
-            pax: 2000,
-            total: 1500000000,
-            fasilitas: [
-                'Grand Ballroom Exclusive Full Day', 'International Buffet 2.000 Pax', 'Luxury Decoration Custom Concept',
-                'Fresh Flower Import', 'Videotron & Premium Lighting', 'Live Orchestra / Band', 'MC Profesional Premium',
-                'Cinematic Wedding Movie', 'Professional Content Creator Team', 'Photobooth Unlimited',
-                '2 Executive Suite Room', 'Honeymoon Package', 'VIP Holding Room', 'Valet Parking Unlimited',
-                'Wedding Cake Premium 7 Tier', 'Security & Guest Management Team'
-            ]
+            nama: 'Diamond Package', pax: 2000, total: 1500000000,
+            fasilitas: ['Grand Ballroom Exclusive Full Day','International Buffet 2.000 Pax','Luxury Decoration Custom Concept','Fresh Flower Import','Videotron & Premium Lighting','Live Orchestra / Band','MC Profesional Premium','Cinematic Wedding Movie','Professional Content Creator Team','Photobooth Unlimited','2 Executive Suite Room','Honeymoon Package','VIP Holding Room','Valet Parking Unlimited','Wedding Cake Premium 7 Tier','Security & Guest Management Team']
         },
     };
 
-    function tambahRundown() {
+    function tambahRundown(item = null) {
         document.getElementById('rundownEmpty').style.display = 'none';
         const container = document.getElementById('rundownContainer');
         const div = document.createElement('div');
         div.className = 'grid grid-cols-12 gap-2 items-start';
         div.innerHTML = `
-            <input type="time" name="rundown[${rundownIndex}][waktu]" class="col-span-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
-            <input type="text" name="rundown[${rundownIndex}][kegiatan]" placeholder="Kegiatan" class="col-span-5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
-            <input type="text" name="rundown[${rundownIndex}][pic]" placeholder="PIC" class="col-span-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
+            <input type="time" name="rundown[${rundownIndex}][waktu]" value="${item ? item.waktu : ''}" class="col-span-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
+            <input type="text" name="rundown[${rundownIndex}][kegiatan]" placeholder="Kegiatan" value="${item ? item.kegiatan : ''}" class="col-span-5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
+            <input type="text" name="rundown[${rundownIndex}][pic]" placeholder="PIC" value="${item ? item.pic : ''}" class="col-span-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral">
             <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-gray-400 hover:text-red-500 py-2">✕</button>
         `;
         container.appendChild(div);
@@ -270,25 +231,20 @@
         } else {
             const paket = dataPaket[select.value];
             const hargaPerOrang = Math.round(paket.total / paket.pax);
-
             inputTamu.value = paket.pax;
             inputHarga.value = hargaPerOrang;
             inputTamu.readOnly = true;
             inputHarga.readOnly = true;
-
             document.getElementById('fasilitasNamaPaket').textContent = '✨ ' + paket.nama;
-            document.getElementById('fasilitasHarga').textContent =
-                paket.pax.toLocaleString('id-ID') + ' pax — Total Rp ' + paket.total.toLocaleString('id-ID');
-
+            document.getElementById('fasilitasHarga').textContent = paket.pax.toLocaleString('id-ID') + ' pax — Total Rp ' + paket.total.toLocaleString('id-ID');
             const list = document.getElementById('fasilitasList');
             list.innerHTML = '';
             paket.fasilitas.forEach(item => {
                 const li = document.createElement('li');
                 li.className = 'flex items-start gap-1.5';
-                li.innerHTML = `<span class="text-green-500">✓</span><span>${item}</span>`;
+                li.innerHTML = `<span class="text-coral">✓</span><span>${item}</span>`;
                 list.appendChild(li);
             });
-
             fasilitasCard.classList.remove('hidden');
             document.getElementById('namaPaketInput').value = select.value;
             document.getElementById('fasilitasPaketInput').value = paket.fasilitas.join('\n');
@@ -309,11 +265,9 @@
         const tamu = parseInt(document.getElementById('jumlahTamu').value) || 0;
         const harga = parseInt(document.getElementById('hargaPerOrang').value) || 0;
         const subtotalCatering = tamu * harga;
-
         const inputs = document.querySelectorAll('#anggaranContainer input[type="number"]');
         let totalItemLain = 0;
         inputs.forEach(input => totalItemLain += parseInt(input.value) || 0);
-
         document.getElementById('totalItemLain').textContent = 'Rp ' + totalItemLain.toLocaleString('id-ID');
         document.getElementById('totalAnggaran').textContent = 'Rp ' + (subtotalCatering + totalItemLain).toLocaleString('id-ID');
     }

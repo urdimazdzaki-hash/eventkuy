@@ -29,7 +29,7 @@
                     },
                     colors: {
                         navy: '#1E3A5F',
-                        coral: '#FF6B6B',
+                        coral: '#C9A84C',
                     }
                 }
             }
@@ -81,7 +81,7 @@
             transition: background-color 0.3s ease;
         }
         .theme-track.dark-mode {
-            background-color: #FF6B6B;
+            background-color: #C9A84C;
         }
         .theme-knob {
             transform: translateX(0);
@@ -196,7 +196,7 @@
                     <div class="w-px h-6 bg-gray-200 dark:bg-gray-700"></div>
 
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-full bg-coral text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
+                        <div class="w-8 h-8 rounded-full bg-navy text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         </div>
                         <div class="text-sm">

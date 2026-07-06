@@ -99,15 +99,62 @@
     </div>
 
     @if ($event->butuh_cek_cuaca)
-        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-5 mb-6">
-            <div class="flex items-center gap-2 mb-2">
-                <i data-lucide="cloud-rain" class="w-5 h-5 text-yellow-600"></i>
-                <h3 class="font-semibold text-yellow-800 dark:text-yellow-400">Peringatan: H-{{ $event->hari_menuju_event }}</h3>
+        @php
+            $weatherController = new \App\Http\Controllers\WeatherController();
+            $weatherData = $weatherController->getWeatherSummaryForEvent($event);
+        @endphp
+
+        @if ($weatherData)
+            @php
+                $today = $weatherData['today'];
+            @endphp
+
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="cloud-rain" class="w-5 h-5 text-yellow-600"></i>
+                    <h3 class="font-semibold text-gray-800 dark:text-gray-100">Peringatan Cuaca: H-{{ $event->hari_menuju_event }}</h3>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $today['avg_temp'] }}°C</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 capitalize">{{ $today['description'] }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-400">Probabilitas Hujan</p>
+                        <p class="text-xl font-bold text-gray-800 dark:text-gray-100">{{ $today['rain_probability'] }}%</p>
+                    </div>
+                </div>
+
+                <div class="{{ $today['mitigasi']['badge_class'] }} rounded-xl p-4">
+                    <p class="font-semibold mb-2">{{ $today['mitigasi']['label'] }}</p>
+                    <ul class="text-sm space-y-1">
+                        @foreach ($today['mitigasi']['rekomendasi'] as $rekomendasi)
+                            <li>• {{ $rekomendasi }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+                    <p class="text-xs text-gray-400 mb-2">Forecast 3 Hari Ke Depan:</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        @foreach ($weatherData['next_3_days'] as $day)
+                            <div class="text-center p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                <p class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($day['date'])->format('d M') }}</p>
+                                <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ $day['avg_temp'] }}°C</p>
+                                <p class="text-xs {{ $day['mitigasi']['badge_class'] }} rounded px-1 mt-1">{{ $day['rain_probability'] }}%</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
-            <p class="text-sm text-yellow-700 dark:text-yellow-500">
-                Acara outdoor ini sudah mendekati H-3. Laporan kesiapan cuaca akan tampil di sini (menunggu integrasi modul Mhs 3).
-            </p>
-        </div>
+        @else
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-5 mb-6">
+                <p class="text-sm text-yellow-700 dark:text-yellow-500">
+                    Acara outdoor ini sudah mendekati H-3, tapi data cuaca belum tersedia. Pastikan kota venue sudah diisi dengan benar.
+                </p>
+            </div>
+        @endif
     @endif
 
     <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">

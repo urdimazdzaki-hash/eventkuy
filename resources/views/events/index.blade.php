@@ -194,12 +194,40 @@
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-6 animate-fade-slide-up delay-400">
+    @php
+        $weatherController = new \App\Http\Controllers\WeatherController();
+        $eventsButuhCekCuaca = \App\Models\Event::where('tipe_lokasi', 'outdoor')->get()->filter(fn($e) => $e->butuh_cek_cuaca);
+    @endphp
+
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-6">
         <div class="flex items-center gap-2 mb-3">
-            <i class="ph-duotone ph-cloud-sun text-xl text-blue-400"></i>
+            <i data-lucide="cloud-sun" class="w-5 h-5 text-blue-400"></i>
             <h3 class="font-semibold text-gray-800 dark:text-gray-100">Weather Alert</h3>
         </div>
-        <p class="text-sm text-gray-400">Menunggu integrasi modul cek cuaca (Mhs 3). Akan menampilkan peringatan otomatis saat acara H-3.</p>
+
+        @if ($eventsButuhCekCuaca->isEmpty())
+            <p class="text-sm text-gray-400">Tidak ada event yang perlu dipantau saat ini.</p>
+        @else
+            <div class="space-y-3">
+                @foreach ($eventsButuhCekCuaca as $ev)
+                    @php
+                        $wd = $weatherController->getWeatherSummaryForEvent($ev);
+                    @endphp
+
+                    @if ($wd)
+                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                            <div>
+                                <p class="font-medium text-gray-800 dark:text-gray-100">{{ $ev->nama_acara }}</p>
+                                <p class="text-xs text-gray-400">H-{{ $ev->hari_menuju_event }} · {{ $ev->kota_venue }}</p>
+                            </div>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full {{ $wd['today']['mitigasi']['badge_class'] }}">
+                                {{ $wd['today']['mitigasi']['label'] }}
+                            </span>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        @endif
     </div>
 
     <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 mb-8 animate-fade-slide-up delay-500">

@@ -217,7 +217,7 @@
                     @if ($wd)
                         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
                             <div>
-                                <p class="font-medium text-gray-800 dark:text-gray-100">{{ $ev->nama_acara }}</p>
+                                <p class="font-medium text-gray-800 dark:text-gray-100">{{ $ev->nama_event }}</p>
                                 <p class="text-xs text-gray-400">H-{{ $ev->hari_menuju_event }} · {{ $ev->kota_venue }}</p>
                             </div>
                             <span class="text-xs font-semibold px-3 py-1 rounded-full {{ $wd['today']['mitigasi']['badge_class'] }}">

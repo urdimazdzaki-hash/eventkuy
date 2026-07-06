@@ -180,11 +180,11 @@
                         <span class="text-[10px] bg-coral/10 text-coral px-2 py-0.5 rounded-full ml-auto sidebar-text">Mhs 2</span>
                     </a>
 
-                    <span class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 dark:text-gray-600 cursor-not-allowed">
-                        <i class="ph-duotone ph-cloud-rain text-xl flex-shrink-0"></i>
-                        <span class="sidebar-text">Cuaca</span>
-                        <span class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full ml-auto sidebar-text">Mhs 3</span>
-                    </span>
+                    <a href="{{ route('cuaca.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('cuaca.*') ? 'bg-[#FF6B6B]/10 text-[#FF6B6B]' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">
+    <i class="ph-duotone ph-cloud-rain text-xl flex-shrink-0"></i>
+    <span class="sidebar-text">Cuaca</span>
+    <span class="text-[10px] bg-[#FF6B6B]/10 text-[#FF6B6B] px-2 py-0.5 rounded-full ml-auto sidebar-text">Mhs 3</span>
+</a>
 
                     <a href="{{ route('rundowns.index') }}"
                        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('rundowns.index') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">

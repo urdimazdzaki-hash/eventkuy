@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Cache;
 
 class WeatherController extends Controller
 {
-    /**
-     * Ambil data cuaca saat ini untuk sebuah kota (dengan cache 1 jam)
-     */
     public function getCurrentWeather(string $city): ?array
     {
         $cacheKey = 'weather_current_' . strtolower($city);
@@ -31,9 +28,6 @@ class WeatherController extends Controller
         });
     }
 
-    /**
-     * Ambil data forecast 5 hari untuk sebuah kota (dengan cache 1 jam)
-     */
     public function getForecast(string $city): ?array
     {
         $cacheKey = 'weather_forecast_' . strtolower($city);
@@ -54,10 +48,6 @@ class WeatherController extends Controller
         });
     }
 
-    /**
-     * Ambil ringkasan probabilitas hujan untuk 3 hari ke depan dari forecast
-     * OpenWeatherMap forecast API kasih data per 3 jam, jadi kita kelompokkan per hari
-     */
     public function getRainProbabilityNext3Days(string $city): array
     {
         $forecast = $this->getForecast($city);
@@ -71,7 +61,7 @@ class WeatherController extends Controller
         foreach ($forecast['list'] as $item) {
             $date = date('Y-m-d', $item['dt']);
             $pop = ($item['pop'] ?? 0) * 100;
-            
+
             if (!isset($dailyData[$date])) {
                 $dailyData[$date] = [
                     'date' => $date,
@@ -81,11 +71,10 @@ class WeatherController extends Controller
                     'description_at_max_pop' => '',
                 ];
             }
-            
+
             $dailyData[$date]['pop_values'][] = $pop;
             $dailyData[$date]['temp_values'][] = $item['main']['temp'] ?? 0;
-            
-            // simpan deskripsi dari slot dengan pop tertinggi
+
             if ($pop > $dailyData[$date]['max_pop_so_far']) {
                 $dailyData[$date]['max_pop_so_far'] = $pop;
                 $dailyData[$date]['description_at_max_pop'] = $item['weather'][0]['description'] ?? '';
@@ -96,7 +85,7 @@ class WeatherController extends Controller
         $count = 0;
 
         foreach ($dailyData as $date => $data) {
-            if ($count >= 3) break; // hanya ambil 3 hari ke depan
+            if ($count >= 3) break;
 
             $maxPop = max($data['pop_values']);
             $avgTemp = round(array_sum($data['temp_values']) / count($data['temp_values']), 1);
@@ -116,9 +105,6 @@ class WeatherController extends Controller
         return $result;
     }
 
-    /**
-     * Logika rekomendasi mitigasi berdasarkan probabilitas hujan (%)
-     */
     public function getMitigasiRecommendation(float $rainProbability): array
     {
         if ($rainProbability > 70) {
@@ -154,9 +140,6 @@ class WeatherController extends Controller
         ];
     }
 
-    /**
-     * Endpoint halaman /cuaca — daftar semua event outdoor + status cuacanya
-     */
     public function index()
     {
         $events = Event::where('tipe_lokasi', 'outdoor')->get();
@@ -172,29 +155,25 @@ class WeatherController extends Controller
 
         return view('cuaca.index', ['eventsWithWeather' => $eventsWithWeather]);
     }
-}
 
-    /**
-     * Ambil ringkasan cuaca untuk 1 event (dipakai di halaman detail & dashboard)
-     */
     public function getWeatherSummaryForEvent(Event $event): ?array
     {
         if (!$event->kota_venue) {
             return null;
         }
-        
+
         $forecast3Days = $this->getRainProbabilityNext3Days($event->kota_venue);
-        
+
         if (empty($forecast3Days)) {
             return null;
         }
-        
-        // Ambil forecast yang paling sesuai dengan hari_menuju_event
+
         $hariKe = max(0, $event->hari_menuju_event);
         $todayForecast = $forecast3Days[$hariKe] ?? $forecast3Days[0];
-        
+
         return [
             'today' => $todayForecast,
             'next_3_days' => $forecast3Days,
         ];
     }
+}

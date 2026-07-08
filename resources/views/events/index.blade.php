@@ -106,7 +106,6 @@
 
     {{-- Mid Row --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-4 animate-fade-slide-up delay-300">
-
         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Upcoming Event</h3>
@@ -129,17 +128,11 @@
                                 <p class="text-xs text-gray-400">{{ $event->tanggal_event->translatedFormat('d M Y') }}</p>
                             </div>
                             @if ($event->hari_menuju_event < 0)
-                                <span class="text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 font-medium px-2 py-1 rounded-lg whitespace-nowrap">
-                                    Selesai
-                                </span>
+                                <span class="text-xs bg-gray-100 dark:bg-gray-800 text-gray-500 font-medium px-2 py-1 rounded-lg whitespace-nowrap">Selesai</span>
                             @elseif ($event->hari_menuju_event == 0)
-                                <span class="text-xs bg-coral/10 text-coral font-medium px-2 py-1 rounded-lg whitespace-nowrap animate-pulse">
-                                    Berlangsung
-                                </span>
+                                <span class="text-xs bg-coral/10 text-coral font-medium px-2 py-1 rounded-lg whitespace-nowrap animate-pulse">Berlangsung</span>
                             @else
-                                <span class="text-xs bg-green-50 text-green-600 font-medium px-2 py-1 rounded-lg whitespace-nowrap">
-                                    H-{{ $event->hari_menuju_event }}
-                                </span>
+                                <span class="text-xs bg-green-50 text-green-600 font-medium px-2 py-1 rounded-lg whitespace-nowrap">H-{{ $event->hari_menuju_event }}</span>
                             @endif
                         </a>
                     @endforeach
@@ -162,14 +155,9 @@
                     $jumlahHari = now()->daysInMonth;
                     $tanggalEventBulanIni = $events->map(fn($e) => $e->tanggal_event->day . '-' . $e->tanggal_event->month)->toArray();
                 @endphp
-                @for ($i = 0; $i < $offset; $i++)
-                    <div></div>
-                @endfor
+                @for ($i = 0; $i < $offset; $i++)<div></div>@endfor
                 @for ($tgl = 1; $tgl <= $jumlahHari; $tgl++)
-                    @php
-                        $isToday = $tgl == now()->day;
-                        $hasEvent = in_array($tgl . '-' . now()->month, $tanggalEventBulanIni);
-                    @endphp
+                    @php $isToday = $tgl == now()->day; $hasEvent = in_array($tgl . '-' . now()->month, $tanggalEventBulanIni); @endphp
                     <div class="relative text-[11px] py-1.5 mx-0.5 my-0.5 rounded-lg {{ $isToday ? 'bg-coral text-white font-bold' : ($hasEvent ? 'bg-coral/10 text-coral font-semibold' : 'text-gray-600 dark:text-gray-300') }}">
                         {{ $tgl }}
                         @if ($hasEvent && !$isToday)
@@ -205,18 +193,39 @@
         </div>
     </div>
 
-    {{-- Weather + Grafik Anggaran --}}
+    {{-- Weather + Grafik --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4 animate-fade-slide-up delay-400">
 
-        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+        @php
+            $weatherController = new \App\Http\Controllers\WeatherController();
+            $eventsButuhCekCuaca = \App\Models\Event::where('tipe_lokasi', 'outdoor')->get()->filter(fn($e) => $e->butuh_cek_cuaca);
+        @endphp
+
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
+            <div class="flex items-center gap-2 mb-3">
                 <i class="ph-duotone ph-cloud-sun text-xl text-blue-400"></i>
+                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">Weather Alert</h3>
             </div>
-            <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Weather Alert</p>
-                <p class="text-xs text-gray-400 mt-0.5">Menunggu integrasi modul Mhs 3. Peringatan otomatis tampil H-3 sebelum acara.</p>
-            </div>
-            <span class="text-xs bg-yellow-50 text-yellow-600 font-medium px-3 py-1 rounded-lg whitespace-nowrap">Segera</span>
+            @if ($eventsButuhCekCuaca->isEmpty())
+                <p class="text-xs text-gray-400">Tidak ada event yang perlu dipantau saat ini.</p>
+            @else
+                <div class="space-y-3">
+                    @foreach ($eventsButuhCekCuaca as $ev)
+                        @php $wd = $weatherController->getWeatherSummaryForEvent($ev); @endphp
+                        @if ($wd)
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800 dark:text-gray-100">{{ $ev->nama_event }}</p>
+                                    <p class="text-xs text-gray-400">H-{{ $ev->hari_menuju_event }} · {{ $ev->kota_venue }}</p>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 rounded-full {{ $wd['today']['mitigasi']['badge_class'] }}">
+                                    {{ $wd['today']['mitigasi']['label'] }}
+                                </span>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
@@ -320,10 +329,7 @@
 <script>
 function animateCount(id, target, duration, isRupiah) {
     const el = document.getElementById(id);
-    if (!el || target === 0) {
-        if (el) el.textContent = isRupiah ? 'Rp 0' : '0';
-        return;
-    }
+    if (!el || target === 0) { if (el) el.textContent = isRupiah ? 'Rp 0' : '0'; return; }
     let start = 0;
     const step = target / (duration / 16);
     const timer = setInterval(() => {

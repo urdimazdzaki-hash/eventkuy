@@ -148,10 +148,11 @@
                         <span class="sidebar-text">Vendor</span>
                     </a>
 
-                    <span class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-300 dark:text-gray-600 cursor-not-allowed">
+                    <a href="{{ route('cuaca.index') }}"
+                       class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('cuaca.*') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
                         <i class="ph-duotone ph-cloud-rain text-xl flex-shrink-0"></i>
                         <span class="sidebar-text">Cuaca</span>
-                    </span>
+                    </a>
 
                     <a href="{{ route('rundowns.index') }}"
                        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('rundowns.index') ? 'bg-coral/10 text-coral' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800' }}">
@@ -179,7 +180,6 @@
                 </button>
 
                 <header class="h-14 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-end px-6 gap-3 flex-shrink-0">
-
                     <div class="flex items-center gap-2">
                         <i class="ph ph-sun text-base text-yellow-400"></i>
                         <button onclick="toggleTheme()" class="relative w-11 h-6 rounded-full focus:outline-none" title="Ganti tema">

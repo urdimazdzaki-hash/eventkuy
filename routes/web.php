@@ -8,6 +8,7 @@ use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VenueController;
+use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,6 +37,13 @@ Route::middleware('auth')->group(function () {
     // Vendor & Venue (Mahasiswa 2)
     Route::resource('vendors', VendorController::class);
     Route::resource('venues', VenueController::class);
+
+    // Cuaca (Mahasiswa 3)
+    Route::get('/cuaca', [WeatherController::class, 'index'])->name('cuaca.index');
+    Route::get('/test-cuaca/{city}', function ($city) {
+    $controller = new \App\Http\Controllers\WeatherController();
+    return $controller->getRainProbabilityNext3Days($city);
+});
 
     // Rundown
     Route::get('/rundowns', [RundownController::class, 'index'])->name('rundowns.index');

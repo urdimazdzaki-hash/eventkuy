@@ -154,6 +154,11 @@ class WeatherController extends Controller
         ]);
     }
 
+    /**
+     * Ringkasan cuaca untuk satu event — dipakai di events/show.blade.php.
+     * Mengembalikan 'today' (avg_temp, description, icon, rain_probability, mitigasi)
+     * dan 'next_3_days' (array dengan struktur yang sama + date).
+     */
     public function getWeatherSummaryForEvent(Event $event)
     {
         if (!$event->kota_venue) {
@@ -174,19 +179,47 @@ class WeatherController extends Controller
 
         $data = $response->json();
 
-        $forecast = collect($data['list'])->filter(function ($item) use ($event) {
-            return str_starts_with($item['dt_txt'], $event->tanggal_event->format('Y-m-d'));
+        $grouped = collect($data['list'])->groupBy(function ($item) {
+            return substr($item['dt_txt'], 0, 10);
         });
 
-        $rainProbability = round(
-            $forecast->max(fn($i) => ($i['pop'] ?? 0) * 100)
-        );
+        $buildDay = function ($items) {
+            $avgTemp = round($items->avg(fn($i) => $i['main']['temp']));
+            $rainProbability = round($items->max(fn($i) => ($i['pop'] ?? 0) * 100));
+            $weather = $items->first()['weather'][0] ?? [];
+
+            return [
+                'avg_temp' => $avgTemp,
+                'description' => $weather['description'] ?? '-',
+                'icon' => $weather['icon'] ?? '01d',
+                'rain_probability' => $rainProbability,
+                'mitigasi' => $this->buildMitigasi($rainProbability),
+            ];
+        };
+
+        $tanggalEvent = $event->tanggal_event->format('Y-m-d');
+
+        if (!isset($grouped[$tanggalEvent])) {
+            return null;
+        }
+
+        $today = $buildDay($grouped[$tanggalEvent]);
+        $today['date'] = $tanggalEvent;
+
+        $next3Days = [];
+        $count = 0;
+        foreach ($grouped as $tanggal => $items) {
+            if ($tanggal === $tanggalEvent) continue;
+            if ($count >= 3) break;
+            $day = $buildDay($items);
+            $day['date'] = $tanggal;
+            $next3Days[] = $day;
+            $count++;
+        }
 
         return [
-            'today' => [
-                'rain_probability' => $rainProbability,
-                'mitigasi' => $this->buildMitigasi($rainProbability)
-            ]
+            'today' => $today,
+            'next_3_days' => $next3Days,
         ];
     }
 

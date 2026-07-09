@@ -32,27 +32,36 @@
                     <i class="ph-fill ph-map-pin text-sm inline mr-1"></i>
                     {{ $eventTerdekat->lokasi_venue ?? 'Lokasi belum diset' }} &middot; {{ $eventTerdekat->tanggal_event->translatedFormat('d F Y') }}
                 </p>
-                <div class="flex gap-3 justify-center">
-                    <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
-                        <p id="countdown-hari" class="text-2xl font-bold text-white">--</p>
-                        <p class="text-white/70 text-xs">Hari</p>
+
+                @if ($eventTerdekat->hari_menuju_event == 0)
+                    <div class="flex items-center gap-2 bg-white/20 rounded-full px-5 py-3">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-white font-semibold text-sm">Acara Sedang Berlangsung Hari Ini</span>
                     </div>
-                    <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
-                        <p id="countdown-jam" class="text-2xl font-bold text-white">--</p>
-                        <p class="text-white/70 text-xs">Jam</p>
+                @else
+                    <div class="flex gap-3 justify-center">
+                        <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
+                            <p id="countdown-hari" class="text-2xl font-bold text-white">--</p>
+                            <p class="text-white/70 text-xs">Hari</p>
+                        </div>
+                        <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
+                            <p id="countdown-jam" class="text-2xl font-bold text-white">--</p>
+                            <p class="text-white/70 text-xs">Jam</p>
+                        </div>
+                        <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
+                            <p id="countdown-menit" class="text-2xl font-bold text-white">--</p>
+                            <p class="text-white/70 text-xs">Menit</p>
+                        </div>
+                        <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
+                            <p id="countdown-detik" class="text-2xl font-bold text-white">--</p>
+                            <p class="text-white/70 text-xs">Detik</p>
+                        </div>
                     </div>
-                    <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
-                        <p id="countdown-menit" class="text-2xl font-bold text-white">--</p>
-                        <p class="text-white/70 text-xs">Menit</p>
-                    </div>
-                    <div class="bg-white/20 rounded-xl px-4 py-3 text-center min-w-[64px]">
-                        <p id="countdown-detik" class="text-2xl font-bold text-white">--</p>
-                        <p class="text-white/70 text-xs">Detik</p>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
 
+        @if ($eventTerdekat->hari_menuju_event != 0)
         <script>
             const targetDate = new Date("{{ $eventTerdekat->tanggal_event->format('Y-m-d') }}T00:00:00");
             function updateCountdown() {
@@ -77,6 +86,7 @@
             updateCountdown();
             setInterval(updateCountdown, 1000);
         </script>
+        @endif
     @endif
 
     {{-- Stat Cards --}}
@@ -326,6 +336,7 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 function animateCount(id, target, duration, isRupiah) {
     const el = document.getElementById(id);
@@ -407,6 +418,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 @endsection

@@ -3,177 +3,221 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
 
 class WeatherController extends Controller
 {
-    public function getCurrentWeather(string $city): ?array
+    public function index()
     {
-        $cacheKey = 'weather_current_' . strtolower($city);
+        $events = Event::where('user_id', auth()->id())
+            ->whereDate('tanggal_event', '>=', now())
+            ->orderBy('tanggal_event')
+            ->get();
 
-        return Cache::remember($cacheKey, now()->addHour(), function () use ($city) {
-            $response = Http::get('https://api.openweathermap.org/data/2.5/weather', [
-                'q' => $city,
-                'appid' => config('services.openweather.key'),
-                'units' => 'metric',
-                'lang' => 'id',
-            ]);
+        $eventsWithWeather = $events->map(function ($event) {
 
-            if ($response->failed()) {
-                return null;
+            $event->hari_menuju_event = now()->diffInDays($event->tanggal_event, false);
+
+            $forecast = collect();
+
+            if ($event->kota_venue) {
+
+                $response = Http::get('https://api.openweathermap.org/data/2.5/forecast', [
+                    'q' => $event->kota_venue,
+                    'appid' => config('services.openweather.key'),
+                    'units' => 'metric',
+                    'lang' => 'id',
+                    'cnt' => 40,
+                ]);
+
+                if ($response->successful()) {
+
+                    $data = $response->json();
+
+                    $grouped = collect($data['list'])->groupBy(function ($item) {
+                        return substr($item['dt_txt'], 0, 10);
+                    });
+
+                    $forecast = $grouped->take(3)->map(function ($items, $tanggal) {
+
+                        $avgTemp = round($items->avg(fn($i) => $i['main']['temp']));
+
+                        $rainProbability = round(
+                            $items->max(fn($i) => ($i['pop'] ?? 0) * 100)
+                        );
+
+                        $weather = $items->first()['weather'][0] ?? [];
+
+                        return [
+                            'date' => $tanggal,
+                            'avg_temp' => $avgTemp,
+                            'rain_probability' => $rainProbability,
+                            'description' => $weather['description'] ?? '-',
+                            'icon' => $weather['icon'] ?? '01d',
+                            'mitigasi' => $this->buildMitigasi($rainProbability),
+                        ];
+
+                    })->values();
+                }
             }
 
-            return $response->json();
-        });
-    }
-
-    public function getForecast(string $city): ?array
-    {
-        $cacheKey = 'weather_forecast_' . strtolower($city);
-
-        return Cache::remember($cacheKey, now()->addHour(), function () use ($city) {
-            $response = Http::get('https://api.openweathermap.org/data/2.5/forecast', [
-                'q' => $city,
-                'appid' => config('services.openweather.key'),
-                'units' => 'metric',
-                'lang' => 'id',
-            ]);
-
-            if ($response->failed()) {
-                return null;
-            }
-
-            return $response->json();
-        });
-    }
-
-    public function getRainProbabilityNext3Days(string $city): array
-    {
-        $forecast = $this->getForecast($city);
-
-        if (!$forecast || !isset($forecast['list'])) {
-            return [];
-        }
-
-        $dailyData = [];
-
-        foreach ($forecast['list'] as $item) {
-            $date = date('Y-m-d', $item['dt']);
-            $pop = ($item['pop'] ?? 0) * 100;
-
-            if (!isset($dailyData[$date])) {
-                $dailyData[$date] = [
-                    'date' => $date,
-                    'pop_values' => [],
-                    'temp_values' => [],
-                    'max_pop_so_far' => -1,
-                    'description_at_max_pop' => '',
-                ];
-            }
-
-            $dailyData[$date]['pop_values'][] = $pop;
-            $dailyData[$date]['temp_values'][] = $item['main']['temp'] ?? 0;
-
-            if ($pop > $dailyData[$date]['max_pop_so_far']) {
-                $dailyData[$date]['max_pop_so_far'] = $pop;
-                $dailyData[$date]['description_at_max_pop'] = $item['weather'][0]['description'] ?? '';
-            }
-        }
-
-        $result = [];
-        $count = 0;
-
-        foreach ($dailyData as $date => $data) {
-            if ($count >= 3) break;
-
-            $maxPop = max($data['pop_values']);
-            $avgTemp = round(array_sum($data['temp_values']) / count($data['temp_values']), 1);
-            $mainDescription = $data['description_at_max_pop'] ?: '-';
-
-            $result[] = [
-                'date' => $date,
-                'rain_probability' => round($maxPop),
-                'avg_temp' => $avgTemp,
-                'description' => $mainDescription,
-                'mitigasi' => $this->getMitigasiRecommendation($maxPop),
+            return [
+                'event' => $event,
+                'forecast' => $forecast,
             ];
+        });
 
-            $count++;
-        }
-
-        return $result;
+        return view('weather.index', compact('eventsWithWeather'));
     }
 
-    public function getMitigasiRecommendation(float $rainProbability): array
+    private function buildMitigasi($rainProbability)
     {
-        if ($rainProbability > 70) {
+        if ($rainProbability >= 70) {
             return [
                 'level' => 'bahaya',
-                'label' => 'Waspada Tinggi',
-                'badge_class' => 'bg-red-100 text-red-700',
+                'label' => 'Bahaya',
+                'badge_class' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
                 'rekomendasi' => [
-                    'Pertimbangkan relokasi indoor',
-                    'Hubungi pawang hujan',
-                ],
+                    'Siapkan tenda',
+                    'Siapkan lokasi indoor',
+                    'Pertimbangkan reschedule'
+                ]
             ];
         }
 
-        if ($rainProbability > 50) {
+        if ($rainProbability >= 50) {
             return [
                 'level' => 'waspada',
                 'label' => 'Waspada',
-                'badge_class' => 'bg-yellow-100 text-yellow-700',
+                'badge_class' => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
                 'rekomendasi' => [
-                    'Siapkan tenda cadangan',
-                ],
+                    'Siapkan tenda',
+                    'Pantau cuaca berkala'
+                ]
             ];
         }
 
         return [
             'level' => 'aman',
-            'label' => 'Kondisi Baik',
-            'badge_class' => 'bg-green-100 text-green-700',
+            'label' => 'Aman',
+            'badge_class' => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
             'rekomendasi' => [
-                'Kondisi cuaca mendukung, tidak perlu tindakan khusus',
-            ],
+                'Cuaca baik',
+                'Event dapat berjalan normal'
+            ]
         ];
     }
 
-    public function index()
+    public function getRainProbabilityNext3Days($city)
     {
-        $events = Event::where('tipe_lokasi', 'outdoor')->get();
+        $response = Http::get('https://api.openweathermap.org/data/2.5/forecast', [
+            'q' => $city,
+            'appid' => config('services.openweather.key'),
+            'units' => 'metric',
+            'lang' => 'id',
+            'cnt' => 40,
+        ]);
 
-        $eventsWithWeather = $events->map(function ($event) {
-            $forecast3Days = $this->getRainProbabilityNext3Days($event->kota_venue);
+        if ($response->failed()) {
+            return response()->json([
+                'message' => 'Gagal mengambil data cuaca'
+            ], 500);
+        }
 
-            return [
-                'event' => $event,
-                'forecast' => $forecast3Days,
-            ];
+        $data = $response->json();
+
+        $grouped = collect($data['list'])->groupBy(function ($item) {
+            return substr($item['dt_txt'], 0, 10);
         });
 
-        return view('cuaca.index', ['eventsWithWeather' => $eventsWithWeather]);
+        $forecast = $grouped->take(3)->map(function ($items, $tanggal) {
+
+            $avgTemp = round($items->avg(fn($i) => $i['main']['temp']));
+            $rainProbability = round($items->max(fn($i) => ($i['pop'] ?? 0) * 100));
+
+            $weather = $items->first()['weather'][0] ?? [];
+
+            return [
+                'date' => $tanggal,
+                'avg_temp' => $avgTemp,
+                'rain_probability' => $rainProbability,
+                'description' => $weather['description'] ?? '-',
+                'icon' => $weather['icon'] ?? '01d',
+            ];
+
+        })->values();
+
+        return response()->json([
+            'city' => $data['city']['name'],
+            'forecast' => $forecast,
+        ]);
     }
 
-    public function getWeatherSummaryForEvent(Event $event): ?array
+    public function getWeatherSummaryForEvent(Event $event)
     {
         if (!$event->kota_venue) {
             return null;
         }
 
-        $forecast3Days = $this->getRainProbabilityNext3Days($event->kota_venue);
+        $response = Http::get('https://api.openweathermap.org/data/2.5/forecast', [
+            'q' => $event->kota_venue,
+            'appid' => config('services.openweather.key'),
+            'units' => 'metric',
+            'lang' => 'id',
+            'cnt' => 40,
+        ]);
 
-        if (empty($forecast3Days)) {
+        if ($response->failed()) {
             return null;
         }
 
-        $hariKe = max(0, $event->hari_menuju_event);
-        $todayForecast = $forecast3Days[$hariKe] ?? $forecast3Days[0];
+        $data = $response->json();
+
+        $forecast = collect($data['list'])->filter(function ($item) use ($event) {
+            return str_starts_with($item['dt_txt'], $event->tanggal_event->format('Y-m-d'));
+        });
+
+        $rainProbability = round(
+            $forecast->max(fn($i) => ($i['pop'] ?? 0) * 100)
+        );
 
         return [
-            'today' => $todayForecast,
-            'next_3_days' => $forecast3Days,
+            'today' => [
+                'rain_probability' => $rainProbability,
+                'mitigasi' => $this->buildMitigasi($rainProbability)
+            ]
         ];
+    }
+
+    public function current(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string'
+        ]);
+
+        $response = Http::get('https://api.openweathermap.org/data/2.5/weather', [
+            'q' => $request->city,
+            'appid' => config('services.openweather.key'),
+            'units' => 'metric',
+            'lang' => 'id',
+        ]);
+
+        if ($response->failed()) {
+            return response()->json([
+                'message' => 'Gagal mengambil data cuaca'
+            ], 500);
+        }
+
+        $data = $response->json();
+
+        return response()->json([
+            'city' => $data['name'],
+            'suhu' => $data['main']['temp'],
+            'terasa_seperti' => $data['main']['feels_like'],
+            'kelembaban' => $data['main']['humidity'],
+            'kondisi' => $data['weather'][0]['description'],
+            'icon' => $data['weather'][0]['icon'],
+        ]);
     }
 }

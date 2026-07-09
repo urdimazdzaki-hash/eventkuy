@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rundowns', [RundownController::class, 'index'])->name('rundowns.index');
 
     // Checklist
-    Route::post('/events/{event}/checklists', [ChecklistController::class, 'store'])->name('checklists.store');
+    Route::post('/events/{event}/checlists', [ChecklistController::class, 'store'])->name('checklists.store');
     Route::patch('/events/{event}/checklists/{checklist}/toggle', [ChecklistController::class, 'toggle'])->name('checklists.toggle');
     Route::delete('/events/{event}/checklists/{checklist}', [ChecklistController::class, 'destroy'])->name('checklists.destroy');
 
